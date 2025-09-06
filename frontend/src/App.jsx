@@ -1,10 +1,18 @@
+import { Navigate, Route, Routes } from "react-router";
 import "./App.css";
 import Navbar from "./pages/Navbar";
+import Homepage from "./pages/Homepage";
+import Calendar from "./pages/Calendar";
 
 function App() {
   return (
     <div>
       <Navbar />
+      <Routes>
+        <Route path="/" element={<Navigate to="main" replace />} />
+        <Route path="main" element={<Homepage />} />
+        <Route path="calendar" element={<Calendar />} />
+      </Routes>
     </div>
   );
 }

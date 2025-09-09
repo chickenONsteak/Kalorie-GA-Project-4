@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { NavLink } from "react-router";
 
 const NavAvatar = () => {
   return (
@@ -24,6 +25,9 @@ const NavAvatar = () => {
           <DropdownMenuSeparator />
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>Edit goals</DropdownMenuItem>
+          <DropdownMenuItem>
+            <NavLink to="register">Register</NavLink>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Log out</DropdownMenuItem>
         </DropdownMenuContent>

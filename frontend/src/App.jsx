@@ -4,6 +4,7 @@ import Navbar from "./pages/Navbar";
 import Homepage from "./pages/Homepage";
 import Calendar from "./pages/Calendar";
 import { ThemeProvider } from "./components/ui/themeProvider";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Navigate to="main" replace />} />
           <Route path="main" element={<Homepage />} />
           <Route path="calendar" element={<Calendar />} />
+          <Route path="register" element={<Register />} />
         </Routes>
       </ThemeProvider>
     </div>

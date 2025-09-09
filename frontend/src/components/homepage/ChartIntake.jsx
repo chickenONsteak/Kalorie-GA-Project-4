@@ -31,19 +31,43 @@ const ChartIntake = () => {
 
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <AreaChart accessibilityLayer data={chartData}>
+      <AreaChart
+        accessibilityLayer
+        data={chartData}
+        margin={{
+          left: 12,
+          right: 12,
+        }}
+      >
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="month"
           tickLine={false}
-          tickMargin={10}
-          axisLine={false}
+          tickMargin={8}
+          axisLine={true}
           tickFormatter={(value) => value.slice(0, 3)}
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartTooltip
+          cursor={true}
+          content={<ChartTooltipContent indicator="line" />}
+        />
         <ChartLegend content={<ChartLegendContent />} />
-        <Area dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Area dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+        <Area
+          dataKey="desktop"
+          type="natural"
+          fill={chartConfig.desktop.color}
+          fillOpacity={0.4}
+          stroke={chartConfig.desktop.color}
+          //   stackId="a" // <- THIS IS FOR STACKED CHART, CHANGE IF YOU WANT STACKED
+        />
+        <Area
+          dataKey="mobile"
+          type="natural"
+          fill={chartConfig.mobile.color}
+          fillOpacity={0.4}
+          stroke={chartConfig.mobile.color}
+          //   stackId="a" // <- THIS IS FOR STACKED CHART, CHANGE IF YOU WANT STACKED
+        />
       </AreaChart>
     </ChartContainer>
   );

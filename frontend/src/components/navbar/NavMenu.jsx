@@ -16,13 +16,13 @@ const NavMenu = () => {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuLink>
+          <NavigationMenuLink asChild>
             <NavLink to="main">Home</NavLink>
           </NavigationMenuLink>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuLink>
+          <NavigationMenuLink asChild>
             <NavLink to="calendar">Calendar</NavLink>
           </NavigationMenuLink>
         </NavigationMenuItem>

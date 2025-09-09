@@ -28,6 +28,9 @@ const NavAvatar = () => {
           <DropdownMenuItem>
             <NavLink to="register">Register</NavLink>
           </DropdownMenuItem>
+          <DropdownMenuItem>
+            <NavLink to="sign-in">Sign in</NavLink>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Log out</DropdownMenuItem>
         </DropdownMenuContent>

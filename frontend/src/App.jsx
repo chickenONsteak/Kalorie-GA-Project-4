@@ -4,7 +4,8 @@ import Navbar from "./pages/Navbar";
 import Homepage from "./pages/Homepage";
 import Calendar from "./pages/Calendar";
 import { ThemeProvider } from "./components/ui/themeProvider";
-import Register from "./pages/Register";
+import Register from "./pages/RegistrationPage";
+import SignIn from "./pages/SignInPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<Navigate to="main" replace />} />
           <Route path="main" element={<Homepage />} />
           <Route path="calendar" element={<Calendar />} />
+          <Route path="sign-in" element={<SignIn />} />
           <Route path="register" element={<Register />} />
         </Routes>
       </ThemeProvider>

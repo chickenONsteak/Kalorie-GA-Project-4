@@ -3,21 +3,24 @@ import "./App.css";
 import Navbar from "./pages/Navbar";
 import Homepage from "./pages/Homepage";
 import Calendar from "./pages/Calendar";
+import { ThemeProvider } from "./components/ui/themeProvider";
 
 function App() {
   return (
     <div>
-      <div className="fixed top-0 w-full">
-        <Navbar />
-      </div>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <div className="fixed top-0 w-full">
+          <Navbar />
+        </div>
 
-      <div className="p-10" />
+        <div className="p-10" />
 
-      <Routes>
-        <Route path="/" element={<Navigate to="main" replace />} />
-        <Route path="main" element={<Homepage />} />
-        <Route path="calendar" element={<Calendar />} />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<Navigate to="main" replace />} />
+          <Route path="main" element={<Homepage />} />
+          <Route path="calendar" element={<Calendar />} />
+        </Routes>
+      </ThemeProvider>
     </div>
   );
 }

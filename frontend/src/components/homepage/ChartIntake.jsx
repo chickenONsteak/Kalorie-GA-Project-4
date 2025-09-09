@@ -1,5 +1,5 @@
 import React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
@@ -21,17 +21,17 @@ const ChartIntake = () => {
   const chartConfig = {
     desktop: {
       label: "Desktop",
-      color: "#2563eb",
+      color: "var(--chart-1)",
     },
     mobile: {
       label: "Mobile",
-      color: "#60a5fa",
+      color: "var(--chart-2)",
     },
   };
 
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={chartData}>
+      <AreaChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="month"
@@ -42,9 +42,9 @@ const ChartIntake = () => {
         />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-      </BarChart>
+        <Area dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+        <Area dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+      </AreaChart>
     </ChartContainer>
   );
 };

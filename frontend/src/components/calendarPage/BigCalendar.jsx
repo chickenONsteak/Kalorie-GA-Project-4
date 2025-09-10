@@ -4,20 +4,17 @@ import * as React from "react";
 import { Calendar, CalendarDayButton } from "@/components/ui/calendar";
 
 const BigCalendar = () => {
-  const [range, setRange] = React.useState({
-    from: new Date(2025, 5, 12),
-    to: new Date(2025, 5, 17),
-  });
+  const [date, setDate] = React.useState(new Date(2025, 5, 12));
 
   return (
     <Calendar
-      mode="range"
-      defaultMonth={range?.from}
-      selected={range}
-      onSelect={setRange}
+      mode="single"
+      defaultMonth={date}
+      // selected={range} // <- WILL NEED THIS FOR USERS TO SELECT THE SPECIFIC DATE AND SEE DETAILED INFO FOR THAT DAY
+      // onSelect={setRange} // <- WILL NEED THIS FOR USERS TO SELECT THE SPECIFIC DATE AND SEE DETAILED INFO FOR THAT DAY
       numberOfMonths={1}
       captionLayout="dropdown"
-      className="rounded-lg border shadow-sm [--cell-size:--spacing(11)] md:[--cell-size:--spacing(13)] w-full"
+      className="rounded-lg border shadow-sm [--cell-size:--spacing(11)] md:[--cell-size:--spacing(13)] w-[800px]"
       formatters={{
         formatMonthDropdown: (date) => {
           return date.toLocaleString("default", { month: "long" });

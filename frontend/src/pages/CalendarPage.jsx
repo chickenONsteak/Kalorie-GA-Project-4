@@ -1,13 +1,12 @@
 import React from "react";
-import CombinedCalendar from "../components/calendarPage/CombinedCalendar";
-import Test from "../components/calendarPage/Test";
+import BigCalendar from "../components/calendarPage/BigCalendar";
 
 const CalendarPage = () => {
   return (
     <div>
       <h1>{"<Randomised motivational quote>"}</h1>
-      <CombinedCalendar />
-      <Test />
+
+      <BigCalendar />
     </div>
   );
 };

@@ -1,47 +1,52 @@
-import React from "react";
-import {
-  Calendar as ReactBigCalendar,
-  dayjsLocalizer,
-} from "react-big-calendar";
-import dayjs from "dayjs";
-import "../../../node_modules/react-big-calendar/lib/css/react-big-calendar.css";
+"use client";
 
-const localizer = dayjsLocalizer(dayjs);
+import * as React from "react";
+import { Calendar, CalendarDayButton } from "@/components/ui/calendar";
 
-const myEventsList = [
-  {
-    title: "Meeting",
-    start: new Date(2025, 8, 10, 10, 0), // year, monthIndex (0-based), day, hour, min
-    end: new Date(2025, 8, 10, 11, 0),
-  },
-  {
-    title: "Lunch",
-    start: new Date(2025, 8, 11, 12, 0),
-    end: new Date(2025, 8, 11, 13, 0),
-  },
-];
-
-const BigCalendar = (props) => {
-  //   const [date, setDate] = useState(new Date(2025, 11, 16, 10, 0));
-
-  //   const handleNavigate = (newDateFocus) => {
-  //     setDate(newDateFocus);
-  //   };
+const BigCalendar = () => {
+  const [range, setRange] = React.useState({
+    from: new Date(2025, 5, 12),
+    to: new Date(2025, 5, 17),
+  });
 
   return (
-    <div>
-      <ReactBigCalendar
-        localizer={localizer}
-        events={myEventsList}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 500 }}
-        views={["month"]} // i only want to view month, no need for week & day view
-        toolbar={false}
-        // onNavigate={handleNavigate}
-        date={new Date(2025, 8, 16)} // sets the displayed month
-      />
-    </div>
+    <Calendar
+      mode="range"
+      defaultMonth={range?.from}
+      selected={range}
+      onSelect={setRange}
+      numberOfMonths={1}
+      captionLayout="dropdown"
+      className="rounded-lg border shadow-sm [--cell-size:--spacing(11)] md:[--cell-size:--spacing(13)] w-full"
+      formatters={{
+        formatMonthDropdown: (date) => {
+          return date.toLocaleString("default", { month: "long" });
+        },
+      }}
+      components={{
+        DayButton: ({ children, modifiers, day, ...props }) => {
+          const events = [
+            { title: "Meeting", date: "2025-06-12" },
+            { title: "Lunch", date: "2025-06-12" },
+          ];
+
+          const dayEvents = events.filter(
+            (e) => e.date === day.date.toISOString().split("T")[0] // comparing yyyy-mm-dd
+          );
+
+          return (
+            <CalendarDayButton day={day} modifiers={modifiers} {...props}>
+              {children}
+              {dayEvents.map((event, i) => (
+                <div key={i} className="text-xs text-blue-500">
+                  {event.title}
+                </div>
+              ))}
+            </CalendarDayButton>
+          );
+        },
+      }}
+    />
   );
 };
 

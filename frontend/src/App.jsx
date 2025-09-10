@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router";
 import "./App.css";
 import Navbar from "./pages/Navbar";
 import Homepage from "./pages/Homepage";
-import Calendar from "./pages/Calendar";
+import CalendarPage from "./pages/CalendarPage";
 import { ThemeProvider } from "./components/ui/themeProvider";
 import Register from "./pages/RegistrationPage";
 import SignIn from "./pages/SignInPage";
@@ -20,7 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="main" replace />} />
           <Route path="main" element={<Homepage />} />
-          <Route path="calendar" element={<Calendar />} />
+          <Route path="calendar" element={<CalendarPage />} />
           <Route path="sign-in" element={<SignIn />} />
           <Route path="register" element={<Register />} />
         </Routes>

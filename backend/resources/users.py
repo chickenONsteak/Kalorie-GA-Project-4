@@ -2,7 +2,7 @@ import psycopg2
 from flask import request, jsonify, Blueprint
 from db.db_pool import get_cursor, release_connection
 from marshmallow import ValidationError
-from validators.users import AddOneUserInputs
+from validators.users import AddOneUserInputs, UpdateUserDetailsById
 
 users = Blueprint('users', __name__)
 
@@ -47,9 +47,56 @@ def add_new_user():
             return jsonify(err.messages)
         # REQUEST IS VALID, CONNECT WITH DB
         connection, cursor = get_cursor()
-        cursor.execute('INSERT INTO users (email, first_name, last_name, password) VALUES (%s, %s, %s, %s);', (data['email'], data['first_name'], data['last_name'], data['password']))
+        # CHECK IF EMAIL EXISTS
+        cursor.execute('SELECT * FROM users WHERE email=%s', (data['email'],))
+        if cursor.fetchone():
+            print(f'email address taken')
+            return jsonify(status='error', msg='email address taken'), 400
+        else:
+            cursor.execute('INSERT INTO users (email, first_name, last_name, password) VALUES (%s, %s, %s, %s);', (data['email'], data['first_name'], data['last_name'], data['password']))
+            connection.commit()
+            return jsonify(status='ok', msg='new user added'), 200
+    except psycopg2.Error as err:
+        if connection:
+            connection.rollback()
+        print(f'database error: {err}')
+        return jsonify(status='error'), 400
+    except SyntaxError as err:
+        if connection:
+            connection.rollback()
+        print(f'syntax error: {err}')
+        return jsonify(status='error'), 400
+    except Exception as err:
+        if connection:
+            connection.rollback()
+        print(f'error: {err}')
+        return jsonify(status='error'), 400
+    finally:
+        if connection:
+            release_connection(connection)
+
+# UPDATE USER DETAILS BY ID
+@users.route('/users/', methods=['PATCH'])
+def update_user_details_by_id():
+    connection = None
+    try:
+        uuid = request.json.get('uuid')
+        email = request.json.get('email')
+        first_name = request.json.get('first_name')
+        last_name = request.json.get('last_name')
+
+        connection, cursor = get_cursor()
+        cursor.execute('SELECT * FROM users WHERE uuid=%s', (uuid,))
+        results = cursor.fetchone()
+
+        cursor.execute('UPDATE users '
+                       'SET email=COALESCE(%s, %s), '
+                       'first_name=COALESCE(%s, %s), '
+                       'last_name=COALESCE(%s, %s) '
+                       'WHERE uuid=%s',
+                       (email, results['email'], first_name, results['first_name'], last_name, results['last_name'], uuid))
         connection.commit()
-        return jsonify(status='ok', msg='new user added'), 200
+        return jsonify(status='ok', msg='updated user details'), 200
     except psycopg2.Error as err:
         if connection:
             connection.rollback()

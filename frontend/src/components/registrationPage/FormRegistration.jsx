@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { email, z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,15 +15,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useQueryClient } from "@tanstack/react-query";
+import useFetch from "../../hooks/useFetch";
 
 const formSchema = z
   .object({
-    givenName: z.string().min(1).max(50),
-    familyName: z.string().min(1).max(50),
+    firstName: z.string().min(1).max(50),
+    lastName: z.string().min(1).max(50),
     email: z.email(),
     password: z.string().min(12).max(50),
     confirmPassword: z.string().min(12).max(50),
-    calorieGoal: z.int(),
+    calorieGoal: z.number().int(),
   })
   .refine((data) => data.confirmPassword === data.password, {
     message: "Passwords do not match",
@@ -31,17 +33,36 @@ const formSchema = z
   });
 
 const FormRegistration = () => {
-  // const [calories, setCalories] = useState(0);
+  const [calories, setCalories] = useState(0);
   // const [carbs, setCarbs] = useState(0);
   // const [protein, setProtein] = useState(0);
   // const [fats, setFats] = useState(0);
+  const queryClient = useQueryClient();
+  const fetchData = useFetch();
+
+  const addNewUser = async (data) => {
+    try {
+      const res = await fetchData("/api/users", "PUT", {
+        email: data.email,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        password: data.password,
+      });
+      if (!res.ok) {
+        console.error(res.msg);
+        return;
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   // FOR THE FORM
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      givenName: "",
-      familyName: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -57,6 +78,7 @@ const FormRegistration = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    addNewUser(values);
   }
 
   return (
@@ -66,13 +88,13 @@ const FormRegistration = () => {
           <div className="flex">
             <FormField
               control={form.control}
-              name="givenName"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
                   {/* sr-only — to hide the header for aesthetics but want it to be picked up on screen readers */}
-                  <FormLabel className="sr-only">Given name</FormLabel>
+                  <FormLabel className="sr-only">First name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Given name" {...field} />
+                    <Input placeholder="First name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -81,12 +103,12 @@ const FormRegistration = () => {
 
             <FormField
               control={form.control}
-              name="familyName"
+              name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="sr-only">Family name</FormLabel>
+                  <FormLabel className="sr-only">Last name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Family name" {...field} />
+                    <Input placeholder="Last name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

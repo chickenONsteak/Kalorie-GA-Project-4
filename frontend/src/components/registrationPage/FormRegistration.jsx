@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,8 +18,8 @@ import { Input } from "@/components/ui/input";
 
 const formSchema = z
   .object({
-    givenName: z.string().min(2).max(50),
-    familyName: z.string().min(2).max(50),
+    givenName: z.string().min(1).max(50),
+    familyName: z.string().min(1).max(50),
     email: z.email(),
     password: z.string().min(12).max(50),
     confirmPassword: z.string().min(12).max(50),
@@ -31,7 +31,12 @@ const formSchema = z
   });
 
 const FormRegistration = () => {
-  // 1. Define your form.
+  // const [calories, setCalories] = useState(0);
+  // const [carbs, setCarbs] = useState(0);
+  // const [protein, setProtein] = useState(0);
+  // const [fats, setFats] = useState(0);
+
+  // FOR THE FORM
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,11 +45,14 @@ const FormRegistration = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      calorieGoal: "",
+      calorieGoal: 0,
+      carbsGoal: 0,
+      proteinGoal: 0,
+      fatsGoal: 0,
     },
   });
 
-  // 2. Define a submit handler.
+  // HANDLE onSubmit
   function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
@@ -157,9 +165,17 @@ const FormRegistration = () => {
                       type="number"
                       placeholder="Calories per day"
                       {...field}
-                      onChange={(event) =>
-                        field.onChange(Number(event.target.value))
-                      }
+                      onChange={(event) => {
+                        // // THOUGHT PROCESS:
+                        // // when user changes value on calories input, the states "carbs", "protein", and "fats" will change and hence the values on carbs, protein, and fats will update in real time
+                        // // when user changes values on carbs, protein, or fats, the state "calories" will change and update the value on the calories input
+                        // setCalories(Number(event.target.value));
+                        // setCarbs(calories * 0.55);
+                        // setProtein(calories * 0.2);
+                        // setFats(calories * 0.25);
+                        // field.onChange(calories);
+                        field.onChange(Number(event.target.value));
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
@@ -180,6 +196,65 @@ const FormRegistration = () => {
 
             <span>kcal / day</span>
           </div>
+
+          {/* <div>
+            <p>
+              <span className="font-bold">Alternatively</span>, you can set by
+              macros:
+            </p>
+
+            <div className="flex">
+              <FormField
+                control={form.control}
+                name="carbsGoal"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Carbs</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="w-[75px]"
+                        type="number"
+                        {...field}
+                        onChange={(event) => {
+                          setCarbs(Number(event.target.value));
+                          field.onChange(carbs);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="proteinGoal"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Protein</FormLabel>
+                    <FormControl>
+                      <Input className="w-[75px]" type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="fatsGoal"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fats</FormLabel>
+                    <FormControl>
+                      <Input className="w-[75px]" type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div> */}
 
           <Button type="submit">Register</Button>
         </form>

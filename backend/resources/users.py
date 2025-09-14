@@ -8,6 +8,13 @@ from validators.users import AddOneUserInputs, UpdateUserDetailsById, SignInInpu
 
 users = Blueprint('users', __name__)
 
+# FUNCTION FOR GENERATING ACCESS AND REFRESH TOKENS UPON LOGGING IN
+def generate_tokens(fetch_results):
+    claims = {'first_name': fetch_results['first_name'], 'last_name': fetch_results['last_name']}
+    generated_access_token = create_access_token(fetch_results['email'], additional_claims=claims)
+    generated_refresh_token = create_refresh_token(fetch_results['email'], additional_claims=claims)
+    return generated_access_token, generated_refresh_token
+
 # GET ALL USERS
 @users.route('/users')
 def find_all_users():
@@ -58,7 +65,13 @@ def register():
             hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
             cursor.execute('INSERT INTO users (email, first_name, last_name, hashed_password) VALUES (%s, %s, %s, %s);', (data['email'], data['first_name'], data['last_name'], hashed_password.decode('utf-8')))
             connection.commit()
-            return jsonify(status='ok', msg='new user added'), 200
+
+            # TO AUTO SIGN IN AFTER USER REGISTERS AN ACCOUNT SUCCESSFULLY
+            cursor.execute('SELECT * FROM users WHERE email=%s', (data['email'],))
+            results = cursor.fetchone()
+            access_token, refresh_token = generate_tokens(results)
+
+            return jsonify(status='ok', msg='new user added', access=access_token, refresh=refresh_token), 200
     except psycopg2.Error as err:
         if connection:
             connection.rollback()
@@ -95,16 +108,14 @@ def sign_in():
 
         if not results:
             return jsonify(status='error', msg='email or password incorrect'), 401
+
         access = bcrypt.checkpw(data['password'].encode('utf-8'), results['hashed_password'].encode('utf-8'))
         if not access:
             return jsonify(status='error', msg='email or password incorrect'), 401
 
-        # claims = {'name': results['name']}
-        # access_token = create_access_token(results['email'], additional_claims=claims)
-        # refresh_token = create_refresh_token(results['email'], additional_claims=claims)
-        access_token = create_access_token(results['email'])
-        refresh_token = create_refresh_token(results['email'])
+        access_token, refresh_token = generate_tokens(results)
         return jsonify(access=access_token, refresh=refresh_token), 200
+
     except psycopg2.Error as err:
         if connection:
             connection.rollback()

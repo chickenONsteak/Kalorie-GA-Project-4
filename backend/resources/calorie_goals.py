@@ -7,7 +7,7 @@ from validators.calorie_goals import AddOneGoalInputs, FindGoalsByUserId
 calorie_goals = Blueprint('calorie_goals', __name__)
 
 # GET CALORIE GOAL BY USER ID
-@calorie_goals.route('/calorie_goals', methods=['POST'])
+@calorie_goals.route('/view_goals', methods=['POST'])
 def find_goals_by_user():
     connection = None
     try:
@@ -41,7 +41,7 @@ def find_goals_by_user():
             release_connection(connection)
 
 # ADD CALORIE GOAL
-@calorie_goals.route('/calorie_goals', methods=['PUT'])
+@calorie_goals.route('/add_goal', methods=['PUT'])
 def add_new_goal():
     connection = None
     try:

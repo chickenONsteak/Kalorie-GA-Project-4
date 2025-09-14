@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { email, z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,6 +15,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import useFetch from "../../hooks/useFetch";
+import UserContext from "../../contexts/user";
+import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   email: z.email(),
@@ -22,6 +25,27 @@ const formSchema = z.object({
 });
 
 const FormSignIn = () => {
+  const fetchData = useFetch();
+  const userContext = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const signIn = async (data) => {
+    try {
+      const res = await fetchData("/api/sign_in", "POST", {
+        email: data.email,
+        password: data.password,
+      });
+
+      if (res.ok) {
+        userContext.setAccessToken(res.data.access);
+        navigate("/main");
+        console.log(res.data.access);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -36,6 +60,7 @@ const FormSignIn = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    signIn(values);
   }
 
   return (

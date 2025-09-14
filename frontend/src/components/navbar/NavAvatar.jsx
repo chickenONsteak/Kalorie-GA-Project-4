@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -9,8 +9,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NavLink } from "react-router";
+import { jwtDecode } from "jwt-decode";
+import UserContext from "../../contexts/user";
 
 const NavAvatar = () => {
+  const userContext = useContext(UserContext);
+
+  const decoded = jwtDecode(userContext.accessToken);
+
   return (
     <div>
       <DropdownMenu>
@@ -21,7 +27,7 @@ const NavAvatar = () => {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>Austin</DropdownMenuLabel>
+          <DropdownMenuLabel>{`${decoded.first_name} ${decoded.last_name}`}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>Edit goals</DropdownMenuItem>

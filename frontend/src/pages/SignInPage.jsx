@@ -13,18 +13,9 @@ const SignInPage = () => {
 
       <p>
         Do not have a Kalorie account? Create yours{" "}
-        <a
-          className="text-blue-500"
-          href="/register"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <NavLink className="text-blue-500" to="/register">
           here
-        </a>
-        {/* 
-        target="_blank" — opens in a new tab
-        noopener and noreferrer — prevents tabnabbing attack (security reasons) 
-        */}
+        </NavLink>
       </p>
     </div>
   );

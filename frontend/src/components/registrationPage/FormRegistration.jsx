@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useQueryClient } from "@tanstack/react-query";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../contexts/user";
+import { useNavigate } from "react-router";
 
 const formSchema = z
   .object({
@@ -41,6 +42,7 @@ const FormRegistration = () => {
   const queryClient = useQueryClient();
   const fetchData = useFetch();
   const userContext = useContext(UserContext);
+  const navigate = useNavigate();
 
   const addNewUser = async (data) => {
     try {
@@ -52,8 +54,8 @@ const FormRegistration = () => {
       });
 
       if (res.ok) {
-        // userContext.setAccessToken()
-        console.log(data);
+        userContext.setAccessToken(res.data.access);
+        navigate("/main");
       }
     } catch (error) {
       console.error(error.message);
@@ -62,7 +64,7 @@ const FormRegistration = () => {
 
   // const addNewGoal = async (data) => {
   //   try {
-  //     const res = await fetchData("/goals/calorie_goals", "PUT", {});
+  //     const res = await fetchData("/goals/add_goal", "PUT", {});
   //   } catch (error) {}
   // };
 

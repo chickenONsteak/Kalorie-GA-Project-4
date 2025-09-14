@@ -9,6 +9,8 @@ psycopg2-binary = "*"
 flask-cors = "*"
 python-dotenv = "*"
 marshmallow = "*"
+bcrypt = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 

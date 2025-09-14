@@ -1,5 +1,11 @@
 from marshmallow import Schema, fields, validate, EXCLUDE
 
+class FindGoalsByUserId(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+    user_id = fields.UUID(required=True)
+
 class AddOneGoalInputs(Schema):
     class Meta:
         unknown = EXCLUDE

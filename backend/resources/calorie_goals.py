@@ -2,7 +2,7 @@ import psycopg2
 from flask import request, jsonify, Blueprint
 from db.db_pool import get_cursor, release_connection
 from marshmallow import ValidationError
-from validators.calorie_goals import AddOneGoalInputs
+from validators.calorie_goals import AddOneGoalInputs, FindGoalsByUserId
 
 calorie_goals = Blueprint('calorie_goals', __name__)
 
@@ -13,7 +13,7 @@ def find_goals_by_user():
     try:
         data = request.get_json()
         try:
-            AddOneGoalInputs().load(data)
+            FindGoalsByUserId().load(data)
         except ValidationError as err:
             return jsonify(err.messages)
 
@@ -52,7 +52,7 @@ def add_new_goal():
             return jsonify(err.messages)
 
         connection, cursor = get_cursor()
-        cursor.execute('INSERT INTO calorie_goals (calorie_goal, carbohydrates_goal, protein_goal, fats_goal) VALUES (%s, %s, %s, %s);', (data['calorie_goal'], data['carbohydrates_goal'], data['protein_goal'], data['fats_goal']))
+        cursor.execute('INSERT INTO calorie_goals (user_id, calorie_goal, carbohydrates_goal, protein_goal, fats_goal) VALUES (%s, %s, %s, %s, %s);', (data['user_id'], data['calorie_goal'], data['carbohydrates_goal'], data['protein_goal'], data['fats_goal']))
         connection.commit()
         return jsonify(status='ok', msg='new goal added'), 200
     except psycopg2.Error as err:

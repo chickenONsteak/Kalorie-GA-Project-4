@@ -1,8 +1,10 @@
 import psycopg2
+import bcrypt
 from flask import request, jsonify, Blueprint
 from db.db_pool import get_cursor, release_connection
 from marshmallow import ValidationError
-from validators.users import AddOneUserInputs, UpdateUserDetailsById
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, get_jwt
+from validators.users import AddOneUserInputs, UpdateUserDetailsById, SignInInputs
 
 users = Blueprint('users', __name__)
 
@@ -34,13 +36,13 @@ def find_all_users():
         if connection:
             release_connection(connection)
 
-# ADD ONE NEW USER
-@users.route('/users', methods=['PUT'])
-def add_new_user():
+# REGISTER NEW USER
+@users.route('/register', methods=['PUT'])
+def register():
     connection = None
     try:
-        # CHECK WHETHER REQUEST IS VALID FIRST BEFORE CONNECTING WITH THE DB
         data = request.get_json()
+        # CHECK WHETHER REQUEST IS VALID FIRST BEFORE CONNECTING WITH THE DB
         try:
             AddOneUserInputs().load(data)
         except ValidationError as err:
@@ -53,9 +55,56 @@ def add_new_user():
             print(f'email address taken')
             return jsonify(status='error', msg='email address taken'), 400
         else:
-            cursor.execute('INSERT INTO users (email, first_name, last_name, password) VALUES (%s, %s, %s, %s);', (data['email'], data['first_name'], data['last_name'], data['password']))
+            hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
+            cursor.execute('INSERT INTO users (email, first_name, last_name, hashed_password) VALUES (%s, %s, %s, %s);', (data['email'], data['first_name'], data['last_name'], hashed_password.decode('utf-8')))
             connection.commit()
             return jsonify(status='ok', msg='new user added'), 200
+    except psycopg2.Error as err:
+        if connection:
+            connection.rollback()
+        print(f'database error: {err}')
+        return jsonify(status='error'), 400
+    except SyntaxError as err:
+        if connection:
+            connection.rollback()
+        print(f'syntax error: {err}')
+        return jsonify(status='error'), 400
+    except Exception as err:
+        if connection:
+            connection.rollback()
+        print(f'error: {err}')
+        return jsonify(status='error'), 400
+    finally:
+        if connection:
+            release_connection(connection)
+
+# SIGN IN
+@users.route('/sign_in', methods=['POST'])
+def sign_in():
+    connection = None
+    try:
+        data = request.get_json()
+        try:
+            SignInInputs().load(data)
+        except ValidationError as err:
+            return jsonify(err.messages)
+
+        connection, cursor = get_cursor()
+        cursor.execute('SELECT * FROM users WHERE email=%s', (data['email'],))
+        results = cursor.fetchone()
+
+        if not results:
+            return jsonify(status='error', msg='email or password incorrect'), 401
+        access = bcrypt.checkpw(data['password'].encode('utf-8'), results['hashed_password'].encode('utf-8'))
+        if not access:
+            return jsonify(status='error', msg='email or password incorrect'), 401
+
+        # claims = {'name': results['name']}
+        # access_token = create_access_token(results['email'], additional_claims=claims)
+        # refresh_token = create_refresh_token(results['email'], additional_claims=claims)
+        access_token = create_access_token(results['email'])
+        refresh_token = create_refresh_token(results['email'])
+        return jsonify(access=access_token, refresh=refresh_token), 200
     except psycopg2.Error as err:
         if connection:
             connection.rollback()

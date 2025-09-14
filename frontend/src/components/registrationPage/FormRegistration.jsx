@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { email, z } from "zod";
@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useQueryClient } from "@tanstack/react-query";
 import useFetch from "../../hooks/useFetch";
+import UserContext from "../../contexts/user";
 
 const formSchema = z
   .object({
@@ -39,23 +40,31 @@ const FormRegistration = () => {
   // const [fats, setFats] = useState(0);
   const queryClient = useQueryClient();
   const fetchData = useFetch();
+  const userContext = useContext(UserContext);
 
   const addNewUser = async (data) => {
     try {
-      const res = await fetchData("/api/users", "PUT", {
+      const res = await fetchData("/api/register", "PUT", {
         email: data.email,
         first_name: data.firstName,
         last_name: data.lastName,
         password: data.password,
       });
-      if (!res.ok) {
-        console.error(res.msg);
-        return;
+
+      if (res.ok) {
+        // userContext.setAccessToken()
+        console.log(data);
       }
     } catch (error) {
       console.error(error.message);
     }
   };
+
+  // const addNewGoal = async (data) => {
+  //   try {
+  //     const res = await fetchData("/goals/calorie_goals", "PUT", {});
+  //   } catch (error) {}
+  // };
 
   // FOR THE FORM
   const form = useForm({

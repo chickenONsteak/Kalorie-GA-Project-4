@@ -20,7 +20,12 @@ function App() {
     <div>
       <QueryClientProvider client={queryClient}>
         <UserContext.Provider
-          value={{ accessToken, setAccessToken, role, setRole }}
+          value={{
+            accessToken,
+            setAccessToken,
+            role,
+            setRole,
+          }}
         >
           <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <div className="fixed top-0 w-full">

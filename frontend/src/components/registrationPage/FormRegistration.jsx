@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { email, z } from "zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,6 +19,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../contexts/user";
 import { useNavigate } from "react-router";
+import { jwtDecode } from "jwt-decode";
+
+const CARBS_CALORIES_PER_GRAM = 4;
+const PROTEIN_CALORIES_PER_GRAM = 4;
+const FATS_CALORIES_PER_GRAM = 9;
 
 const formSchema = z
   .object({
@@ -28,6 +33,9 @@ const formSchema = z
     password: z.string().min(12).max(50),
     confirmPassword: z.string().min(12).max(50),
     calorieGoal: z.number().int(),
+    carbsGoal: z.number().int(),
+    proteinGoal: z.number().int(),
+    fatsGoal: z.number().int(),
   })
   .refine((data) => data.confirmPassword === data.password, {
     message: "Passwords do not match",
@@ -35,10 +43,6 @@ const formSchema = z
   });
 
 const FormRegistration = () => {
-  const [calories, setCalories] = useState(0);
-  // const [carbs, setCarbs] = useState(0);
-  // const [protein, setProtein] = useState(0);
-  // const [fats, setFats] = useState(0);
   const queryClient = useQueryClient();
   const fetchData = useFetch();
   const userContext = useContext(UserContext);
@@ -51,10 +55,28 @@ const FormRegistration = () => {
         first_name: data.firstName,
         last_name: data.lastName,
         password: data.password,
+        calorie_goal: data.calorieGoal,
+        carbohydrates_goal: data.carbsGoal,
+        protein_goal: data.proteinGoal,
+        fats_goal: data.fatsGoal,
       });
 
       if (res.ok) {
         userContext.setAccessToken(res.data.access);
+        // const decoded = jwtDecode(userContext.accessToken);
+
+        // try {
+        //   await fetchData("/api/register", "PUT", {
+        //     user_id: decoded.user_id,
+        //     calorie_goal: data.calorieGoal,
+        //     carbohydrates_goal: data.carbsGoal,
+        //     protein_goal: data.proteinGoal,
+        //     fats_goal: data.fatsGoal,
+        //   });
+        // } catch (error) {
+        //   console.error(error);
+        // }
+
         navigate("/main");
       }
     } catch (error) {
@@ -64,9 +86,49 @@ const FormRegistration = () => {
 
   // const addNewGoal = async (data) => {
   //   try {
-  //     const res = await fetchData("/goals/add_goal", "PUT", {});
-  //   } catch (error) {}
+  //     console.log(userContext.accessToken);
+  //     const decoded = jwtDecode(userContext.accessToken);
+
+  //     await fetchData("/goals/add_goal", "PUT", {
+  //       user_id: decoded.user_id,
+  //       calorie_goal: data.calorieGoal,
+  //       carbohydrates_goal: data.carbsGoal,
+  //       protein_goal: data.proteinGoal,
+  //       fats_goal: data.fatsGoal,
+  //     });
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
   // };
+
+  // THOUGHT PROCESS FOR handleCalorieInputs AND handleMacroInputs:
+  // when user changes value on calories input, the states "carbs", "protein", and "fats" will change and hence the values on carbs, protein, and fats will update in real time
+  // when user changes values on carbs, protein, or fats, the state "calories" will change and update the value on the calories input
+  const handleCalorieInputs = (event) => {
+    const calories = Number(event.target.value);
+    const carbs = Math.round((calories * 0.55) / CARBS_CALORIES_PER_GRAM);
+    const protein = Math.round((calories * 0.2) / PROTEIN_CALORIES_PER_GRAM);
+    const fats = Math.round((calories * 0.25) / FATS_CALORIES_PER_GRAM);
+
+    form.setValue("calorieGoal", calories);
+    form.setValue("carbsGoal", carbs);
+    form.setValue("proteinGoal", protein);
+    form.setValue("fatsGoal", fats);
+  };
+
+  const handleMacroInputs = (event) => {
+    const inputValue = Number(event.target.value);
+    form.setValue(event.target.name, inputValue);
+
+    const values = form.getValues();
+    const newTotalCalories = Math.round(
+      CARBS_CALORIES_PER_GRAM * values.carbsGoal +
+        PROTEIN_CALORIES_PER_GRAM * values.proteinGoal +
+        FATS_CALORIES_PER_GRAM * values.fatsGoal
+    );
+
+    form.setValue("calorieGoal", newTotalCalories);
+  };
 
   // FOR THE FORM
   const form = useForm({
@@ -84,13 +146,18 @@ const FormRegistration = () => {
     },
   });
 
+  const calorieGoal = form.watch("calorieGoal");
+
   // HANDLE onSubmit
   function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
     addNewUser(values);
+    // addNewGoal(values);
   }
+
+  // useEffect(() => addNewGoal(values), [userContext.accessToken]);
 
   return (
     <>
@@ -199,15 +266,7 @@ const FormRegistration = () => {
                       placeholder="Calories per day"
                       {...field}
                       onChange={(event) => {
-                        // // THOUGHT PROCESS:
-                        // // when user changes value on calories input, the states "carbs", "protein", and "fats" will change and hence the values on carbs, protein, and fats will update in real time
-                        // // when user changes values on carbs, protein, or fats, the state "calories" will change and update the value on the calories input
-                        // setCalories(Number(event.target.value));
-                        // setCarbs(calories * 0.55);
-                        // setProtein(calories * 0.2);
-                        // setFats(calories * 0.25);
-                        // field.onChange(calories);
-                        field.onChange(Number(event.target.value));
+                        handleCalorieInputs(event);
                       }}
                     />
                   </FormControl>
@@ -226,11 +285,12 @@ const FormRegistration = () => {
                 </FormItem>
               )}
             />
+            <p>{calorieGoal}</p>
 
             <span>kcal / day</span>
           </div>
 
-          {/* <div>
+          <div>
             <p>
               <span className="font-bold">Alternatively</span>, you can set by
               macros:
@@ -248,10 +308,7 @@ const FormRegistration = () => {
                         className="w-[75px]"
                         type="number"
                         {...field}
-                        onChange={(event) => {
-                          setCarbs(Number(event.target.value));
-                          field.onChange(carbs);
-                        }}
+                        onChange={(event) => handleMacroInputs(event)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -266,7 +323,12 @@ const FormRegistration = () => {
                   <FormItem>
                     <FormLabel>Protein</FormLabel>
                     <FormControl>
-                      <Input className="w-[75px]" type="number" {...field} />
+                      <Input
+                        className="w-[75px]"
+                        type="number"
+                        {...field}
+                        onChange={(event) => handleMacroInputs(event)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -280,14 +342,19 @@ const FormRegistration = () => {
                   <FormItem>
                     <FormLabel>Fats</FormLabel>
                     <FormControl>
-                      <Input className="w-[75px]" type="number" {...field} />
+                      <Input
+                        className="w-[75px]"
+                        type="number"
+                        {...field}
+                        onChange={(event) => handleMacroInputs(event)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-          </div> */}
+          </div>
 
           <Button type="submit">Register</Button>
         </form>

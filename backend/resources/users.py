@@ -10,7 +10,7 @@ users = Blueprint('users', __name__)
 
 # FUNCTION FOR GENERATING ACCESS AND REFRESH TOKENS UPON LOGGING IN
 def generate_tokens(fetch_results):
-    claims = {'first_name': fetch_results['first_name'], 'last_name': fetch_results['last_name']}
+    claims = {'first_name': fetch_results['first_name'], 'last_name': fetch_results['last_name'], 'user_id': fetch_results['uuid']}
     generated_access_token = create_access_token(fetch_results['email'], additional_claims=claims)
     generated_refresh_token = create_refresh_token(fetch_results['email'], additional_claims=claims)
     return generated_access_token, generated_refresh_token
@@ -62,8 +62,17 @@ def register():
             print(f'email address taken')
             return jsonify(status='error', msg='email address taken'), 400
         else:
+            # cursor.execute('BEGIN')
             hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
-            cursor.execute('INSERT INTO users (email, first_name, last_name, hashed_password) VALUES (%s, %s, %s, %s);', (data['email'], data['first_name'], data['last_name'], hashed_password.decode('utf-8')))
+            cursor.execute('INSERT INTO users (email, first_name, last_name, hashed_password) '
+                           'VALUES (%s, %s, %s, %s) '
+                           'RETURNING uuid;',
+                           (data['email'], data['first_name'], data['last_name'], hashed_password.decode('utf-8'))
+                           )
+            user_id = cursor.fetchone()['uuid'] # TO GET THE UUID FROM THE RESULTS RETURNED BY fetchone() AFTER EXECUTING THE ABOVE
+
+            # TO REGISTER ACCOUNT WITH CALORIE GOAL
+            cursor.execute('INSERT INTO calorie_goals (user_id, calorie_goal, carbohydrates_goal, protein_goal, fats_goal) VALUES (%s, %s, %s, %s, %s);', (user_id , data['calorie_goal'], data['carbohydrates_goal'], data['protein_goal'], data['fats_goal']))
             connection.commit()
 
             # TO AUTO SIGN IN AFTER USER REGISTERS AN ACCOUNT SUCCESSFULLY

@@ -51,10 +51,12 @@ const FormRegistration = () => {
   const addNewUser = async (data) => {
     try {
       const res = await fetchData("/api/register", "PUT", {
+        // FOR USER DETAILS
         email: data.email,
         first_name: data.firstName,
         last_name: data.lastName,
         password: data.password,
+        // FOR CALORIE_GOAL
         calorie_goal: data.calorieGoal,
         carbohydrates_goal: data.carbsGoal,
         protein_goal: data.proteinGoal,
@@ -63,43 +65,12 @@ const FormRegistration = () => {
 
       if (res.ok) {
         userContext.setAccessToken(res.data.access);
-        // const decoded = jwtDecode(userContext.accessToken);
-
-        // try {
-        //   await fetchData("/api/register", "PUT", {
-        //     user_id: decoded.user_id,
-        //     calorie_goal: data.calorieGoal,
-        //     carbohydrates_goal: data.carbsGoal,
-        //     protein_goal: data.proteinGoal,
-        //     fats_goal: data.fatsGoal,
-        //   });
-        // } catch (error) {
-        //   console.error(error);
-        // }
-
         navigate("/main");
       }
     } catch (error) {
       console.error(error.message);
     }
   };
-
-  // const addNewGoal = async (data) => {
-  //   try {
-  //     console.log(userContext.accessToken);
-  //     const decoded = jwtDecode(userContext.accessToken);
-
-  //     await fetchData("/goals/add_goal", "PUT", {
-  //       user_id: decoded.user_id,
-  //       calorie_goal: data.calorieGoal,
-  //       carbohydrates_goal: data.carbsGoal,
-  //       protein_goal: data.proteinGoal,
-  //       fats_goal: data.fatsGoal,
-  //     });
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // };
 
   // THOUGHT PROCESS FOR handleCalorieInputs AND handleMacroInputs:
   // when user changes value on calories input, the states "carbs", "protein", and "fats" will change and hence the values on carbs, protein, and fats will update in real time
@@ -150,14 +121,9 @@ const FormRegistration = () => {
 
   // HANDLE onSubmit
   function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values);
     addNewUser(values);
-    // addNewGoal(values);
   }
-
-  // useEffect(() => addNewGoal(values), [userContext.accessToken]);
 
   return (
     <>

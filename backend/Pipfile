@@ -7,10 +7,11 @@ name = "pypi"
 flask = "*"
 psycopg2-binary = "*"
 flask-cors = "*"
-python-dotenv = "*"
 marshmallow = "*"
 bcrypt = "*"
 flask-jwt-extended = "*"
+openai = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

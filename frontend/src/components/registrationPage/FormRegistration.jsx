@@ -130,8 +130,6 @@ const FormRegistration = () => {
     },
   });
 
-  const calorieGoal = form.watch("calorieGoal");
-
   // HANDLE onSubmit
   function onSubmit(values) {
     console.log(values);
@@ -264,7 +262,6 @@ const FormRegistration = () => {
                 </FormItem>
               )}
             />
-            <p>{calorieGoal}</p>
 
             <span>kcal / day</span>
           </div>

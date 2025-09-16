@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,6 +15,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import useFetch from "../../hooks/useFetch";
+import NewIntakeContext from "../../contexts/newIntake";
+
+const CONFIDENCE_THRESHOLD = 0.8;
 
 const formSchema = z.object({
   foodInput: z
@@ -28,6 +32,26 @@ const formSchema = z.object({
 });
 
 const FormLogIntake = () => {
+  const fetchData = useFetch();
+  const newIntakeContext = useContext(NewIntakeContext);
+
+  const getCalorieEstimate = async (data) => {
+    try {
+      const res = await fetchData("/openai/estimate_calories", "PUT", {
+        food_description: data.foodInput,
+      });
+
+      if (res.ok) {
+        newIntakeContext.setIntake(res.data.output);
+        console.log(res);
+        console.log(res.data.output);
+        console.log(res.data.output.food_name);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   // FOR THE FORM
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -36,52 +60,45 @@ const FormLogIntake = () => {
     },
   });
 
+  const foodInput = form.watch("foodInput");
+
   function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    getCalorieEstimate(values);
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-y-4">
-        <FormField
-          control={form.control}
-          name="foodInput"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>What did you have?</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[400px]"
-                  placeholder="Describe your food — the more details, the better"
-                  {...field}
-                />
-              </FormControl>
-              {/* <FormDescription>
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-y-4">
+          <FormField
+            control={form.control}
+            name="foodInput"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>What did you have?</FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-[400px]"
+                    placeholder="Describe your food — the more details, the better"
+                    {...field}
+                  />
+                </FormControl>
+                {/* <FormDescription>
                 This is your public display name.
               </FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* DO BUTTONS NOW */}
-        <Button type="submit">Log it!</Button>
-      </form>
-    </Form>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-    // <>
-    //   <h2>What did you have?</h2>
-
-    //   <div className="flex">
-    //     <Input
-    //       className="w-154"
-    //       type="text"
-    //       placeholder="Describe your food — the more details, the better"
-    //     />
-    //     <Button>Log it!</Button>
-    //   </div>
-    // </>
+          <Button type="submit">Log it!</Button>
+        </form>
+      </Form>
+      <p>{JSON.stringify(newIntakeContext.intake)}</p>
+    </>
   );
 };
 

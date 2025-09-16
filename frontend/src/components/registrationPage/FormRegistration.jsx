@@ -27,11 +27,23 @@ const FATS_CALORIES_PER_GRAM = 9;
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1).max(50),
-    lastName: z.string().min(1).max(50),
+    firstName: z
+      .string()
+      .min(1, { message: "First name must be at least 1 character" })
+      .max(50, { message: "First name cannot exceed 50 characters" }),
+    lastName: z
+      .string()
+      .min(1, { message: "Last name must be at least 1 character" })
+      .max(50, { message: "Last name cannot exceed 50 characters" }),
     email: z.email(),
-    password: z.string().min(12).max(50),
-    confirmPassword: z.string().min(12).max(50),
+    password: z
+      .string()
+      .min(12, { message: "Password must be at least 12 characters long" })
+      .max(50, { message: "Password cannot exceed 50 characters" }),
+    confirmPassword: z
+      .string()
+      .min(12, { message: "Password must be at least 12 characters long" })
+      .max(50, { message: "Password cannot exceed 50 characters" }),
     calorieGoal: z.number().int(),
     carbsGoal: z.number().int(),
     proteinGoal: z.number().int(),
@@ -43,11 +55,12 @@ const formSchema = z
   });
 
 const FormRegistration = () => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const fetchData = useFetch();
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
 
+  // REGISTER NEW USER
   const addNewUser = async (data) => {
     try {
       const res = await fetchData("/api/register", "PUT", {

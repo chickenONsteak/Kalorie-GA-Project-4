@@ -12,15 +12,15 @@ def find_goals_by_user():
     connection = None
     try:
         data = request.get_json()
-        try:
-            FindGoalsByUserId().load(data)
-        except ValidationError as err:
-            return jsonify(err.messages)
+        FindGoalsByUserId().load(data)
 
         connection, cursor = get_cursor()
         cursor.execute('SELECT * FROM calorie_goals WHERE user_id=%s;', (data['user_id'],))
         results = cursor.fetchall()
+
         return jsonify(results), 200
+    except ValidationError as err:
+        return jsonify(err.messages)
     except psycopg2.Error as err:
         if connection:
             connection.rollback()
@@ -46,15 +46,14 @@ def add_new_goal():
     connection = None
     try:
         data = request.get_json()
-        try:
-            AddOneGoalInputs().load(data)
-        except ValidationError as err:
-            return jsonify(err.messages)
+        AddOneGoalInputs().load(data)
 
         connection, cursor = get_cursor()
         cursor.execute('INSERT INTO calorie_goals (user_id, calorie_goal, carbohydrates_goal, protein_goal, fats_goal) VALUES (%s, %s, %s, %s, %s);', (data['user_id'], data['calorie_goal'], data['carbohydrates_goal'], data['protein_goal'], data['fats_goal']))
         connection.commit()
         return jsonify(status='ok', msg='new goal added'), 200
+    except ValidationError as err:
+        return jsonify(err.messages)
     except psycopg2.Error as err:
         if connection:
             connection.rollback()

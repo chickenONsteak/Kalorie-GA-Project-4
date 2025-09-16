@@ -1,4 +1,5 @@
 import os
+import json # FOR PARSING STR (OPENAI'S RESPONSE) TO JSON FORMAT
 from dotenv import load_dotenv
 from openai import OpenAI
 from flask import request, jsonify, Blueprint
@@ -13,13 +14,13 @@ client = OpenAI(api_key=os.getenv("OPENAI_SECRET_API_KEY"))
 openai_services = Blueprint('openai_services', __name__)
 
 # PROMPT FOR OPENAI TO ESTIMATE CALORIES
-def generate_prompt_for_calorie_estimation(dish_description):
+def generate_prompt_for_calorie_estimation(description_of_food):
     calorie_estimation_prompt = f"""
     You are a nutrition assistant. 
     Given the name and/or description of a food item, estimate its calories and macronutrients (carbohydrates, protein, fat) 
     based on Singaporean portion sizes and local context.  
     
-    Food description: "{dish_description}"
+    Food description: "{description_of_food}"
     
     Requirements:
     - Only use kcal for calories.
@@ -36,8 +37,16 @@ def generate_prompt_for_calorie_estimation(dish_description):
     "protein_g": number,
     "fats_g": number,
     "confidence": 0-1 float (2 decimal places)
+    "assumptions": [
+        "assumption_1",
+        "assumption_2",
+        "assumption_3"
+      ]
     }}
-    
+    Notes:
+    - Replace "assumption_1", "assumption_2", and "assumption_3" with the **top 3 assumptions you made that most directly contributed to your calorie estimation**, based on missing or ambiguous information from the description.
+    - These should be phrased clearly and concisely (e.g., "assumed standard hawker stall portion", "assumed fried not steamed", "assumed chicken thigh not breast").
+
     If confidence < {CONFIDENCE_THRESHOLD}, add:
     {{
         "low_confidence_message": "I’m not too confident. Can you tell me more about the dish?",
@@ -47,29 +56,9 @@ def generate_prompt_for_calorie_estimation(dish_description):
             "detail_3"
         ]
     }}
-    - Replace "detail_1", "detail_2", and "detail_3". with the **top 3 specific details you need from the user to improve confidence the most**, dynamically based on the food description.
+    - Replace "detail_1", "detail_2", and "detail_3" with the **top 3 specific details you need from the user to improve confidence the most**, dynamically based on the food description.
     """
     return calorie_estimation_prompt
-
-    # # IF CONFIDENCE IS LOW (<80%), ADD THIS STATEMENT INSIDE THE PROMPT AND REITERATE THE PROMPT AGAIN
-    # if clarification:
-    #     prompt += f" The user clarified: \"{clarification}\".\n"
-    #
-    # prompt += """
-    # 1. Identify the dish.
-    # 2. Estimate calorie with a single number and not a range, rounded to the nearest whole number.
-    # 3. Indicate your confidence from 0 to 1.
-    # 4. List assumptions (portion size, cooking method, ingredients).
-    #
-    # Return a JSON object:
-    # {
-    #   "food_name": "<name of dish>",
-    #   "estimated_calories": <number>,
-    #   "confidence": <0-1>,
-    #   "assumptions": "<text>"
-    # }
-    # """
-    # return prompt
 
 # PROMPT FOR OPENAI TO GUESS THE DISH BASED ON IMAGE INPUT
 def generate_prompt_for_food_recognition(uploaded_image):
@@ -114,22 +103,25 @@ def generate_prompt_for_food_recognition(uploaded_image):
 def estimate_calories():
     try:
         data = request.get_json()
-        try:
-            UserIntakeInput().load(data)
-        except ValidationError as err:
-            return jsonify(err.messages)
+        # VALIDATE INPUT FIRST
+        UserIntakeInput().load(data)
 
-        prompt = generate_prompt_for_calorie_estimation(data['dish_description'])
-        print(prompt)
+        prompt = generate_prompt_for_calorie_estimation(data['food_description'])
+
         # OPENAI RESPONSE
         response = client.responses.create(
             model="gpt-5-nano",
             input=prompt
         )
+        # print(type(response.output_text))
+        # print(response.output_text)
 
-        print(response.output_text)
+        # PARSE STR TO JSON FORMAT
+        response_json = json.loads(response.output_text)
 
-        return jsonify(status='ok', msg='successful prompt'), 200
+        return jsonify(status='ok', msg='successful prompt', output=response_json), 200
+    except ValidationError as err:
+        return jsonify(err.messages)
     except SyntaxError as err:
         print(f'syntax error: {err}')
         return jsonify(status='error'), 400

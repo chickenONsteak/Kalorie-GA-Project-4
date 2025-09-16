@@ -8,7 +8,7 @@ from validators.users import AddOneUserInputs, UpdateUserDetailsById, SignInInpu
 
 users = Blueprint('users', __name__)
 
-# FUNCTION FOR GENERATING ACCESS AND REFRESH TOKENS UPON LOGGING IN
+# FUNCTION FOR GENERATING ACCESS AND REFRESH TOKENS UPON SUCCESSFUL REGISTRATION AND LOGGING IN — FOR REUSABILITY
 def generate_tokens(fetch_results):
     claims = {'first_name': fetch_results['first_name'], 'last_name': fetch_results['last_name'], 'user_id': fetch_results['uuid']}
     generated_access_token = create_access_token(fetch_results['email'], additional_claims=claims)
@@ -50,10 +50,8 @@ def register():
     try:
         data = request.get_json()
         # CHECK WHETHER REQUEST IS VALID FIRST BEFORE CONNECTING WITH THE DB
-        try:
-            AddOneUserInputs().load(data)
-        except ValidationError as err:
-            return jsonify(err.messages)
+        AddOneUserInputs().load(data)
+
         # REQUEST IS VALID, CONNECT WITH DB
         connection, cursor = get_cursor()
         # CHECK IF EMAIL EXISTS
@@ -81,6 +79,8 @@ def register():
             access_token, refresh_token = generate_tokens(results)
 
             return jsonify(status='ok', msg='new user added', access=access_token, refresh=refresh_token), 200
+    except ValidationError as err:
+        return jsonify(err.messages)
     except psycopg2.Error as err:
         if connection:
             connection.rollback()
@@ -159,7 +159,8 @@ def update_user_details_by_id():
         results = cursor.fetchone()
 
         cursor.execute('UPDATE users '
-                       'SET email=COALESCE(%s, %s), '
+                       # READ UP ON COALESCE
+                       'SET email=COALESCE(%s, %s), ' 
                        'first_name=COALESCE(%s, %s), '
                        'last_name=COALESCE(%s, %s) '
                        'WHERE uuid=%s',

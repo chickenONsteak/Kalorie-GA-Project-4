@@ -35,6 +35,10 @@ const FormLogIntake = () => {
   const fetchData = useFetch();
   const newIntakeContext = useContext(NewIntakeContext);
 
+  // const addIntake = async (data) => {
+
+  // }
+
   const getCalorieEstimate = async (data) => {
     try {
       const res = await fetchData("/openai/estimate_calories", "PUT", {
@@ -43,6 +47,7 @@ const FormLogIntake = () => {
 
       if (res.ok) {
         newIntakeContext.setIntake(res.data.output);
+        // ADD INTO DATABASE
         console.log(res);
         console.log(res.data.output);
         console.log(res.data.output.food_name);

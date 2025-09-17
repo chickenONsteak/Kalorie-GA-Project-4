@@ -39,7 +39,7 @@ def get_all_intakes_by_user():
         if connection:
             release_connection(connection)
 
-@intakes.route('/view_today_intake', methods=['POST'])
+@intakes.route('/view_today_intakes', methods=['POST'])
 def get_today_intake_by_user():
     connection = None
     try:
@@ -114,6 +114,53 @@ def add_new_intake():
         if connection:
             release_connection(connection)
 
+# UPDATE INTAKE
+@intakes.route('/update_intake', methods=['PATCH'])
+def update_intake():
+    connection = None
+    try:
+        intake_id = request.json.get('intake_id')
+        food_name = request.json.get('food_name')
+        calories = request.json.get('calories')
+        carbohydrates = request.json.get('carbohydrates')
+        protein = request.json.get('protein')
+        fats = request.json.get('fats')
+
+        connection, cursor = get_cursor()
+        cursor.execute('SELECT * FROM intakes WHERE id=%s', (intake_id,))
+        results = cursor.fetchone()
+
+        cursor.execute('UPDATE intakes '
+                       'SET food_name=COALESCE(%s, %s), '
+                       'calories=COALESCE(%s, %s), '
+                       'carbohydrates=COALESCE(%s, %s), '
+                       'protein=COALESCE(%s, %s), '
+                       'fats=COALESCE(%s, %s) '
+                       'WHERE id=%s',
+                       (food_name, results['food_name'], calories, results['calories'],
+                        carbohydrates, results['carbohydrates'], protein, results['protein'],
+                        fats, results['fats'], intake_id))
+        connection.commit()
+
+        return jsonify(status='ok', msg='intake successfully updated'), 200
+    except psycopg2.Error as err:
+        if connection:
+            connection.rollback()
+        print(f'database error: {err}')
+        return jsonify(status='error'), 400
+    except SyntaxError as err:
+        if connection:
+            connection.rollback()
+        print(f'syntax error: {err}'), 400
+    except Exception as err:
+        if connection:
+            connection.rollback()
+        print(f'error: {err}')
+        return jsonify(status='error'), 400
+    finally:
+        if connection:
+            release_connection(connection)
+
 # DELETE INTAKE
 @intakes.route('/delete_intake', methods=['DELETE'])
 def delete_intake():
@@ -139,6 +186,98 @@ def delete_intake():
             connection.rollback()
         print(f'syntax error: {err}')
         return jsonify(status='error'), 400
+    except Exception as err:
+        if connection:
+            connection.rollback()
+        print(f'error: {err}')
+        return jsonify(status='error'), 400
+    finally:
+        if connection:
+            release_connection(connection)
+
+# GET TOTAL CALORIES AND MACROS ACROSS ALL INTAKES
+@intakes.route('/view_all_nutritional_intakes', methods=['POST'])
+def get_all_nutritional_intakes():
+    connection = None
+    try:
+        data = request.get_json()
+        FindIntakesByUserId().load(data)
+
+        connection, cursor = get_cursor()
+        # GET THE BREAKDOWN OF TOTAL CALORIES AND MACROS TAKEN IN THE PAST 7 DAYS
+        cursor.execute('''
+            SELECT 
+                TO_CHAR(CAST(created_at AS DATE), 'YYYY-MM-DD') AS intake_date, 
+                SUM(calories) as total_calories, 
+                SUM(carbohydrates) as total_carbohydrates, 
+                SUM(protein) as total_protein, 
+                SUM(fats) as total_fats
+            FROM intakes
+            WHERE user_id=%s
+            GROUP BY intake_date
+            ORDER BY intake_date ASC
+        ''', (data['user_id'],))
+
+        results = cursor.fetchall()
+
+        return jsonify(results), 200
+    except ValidationError as err:
+        return jsonify(err.messages)
+    except psycopg2.Error as err:
+        if connection:
+            connection.rollback()
+        print(f'database error: {err}')
+        return jsonify(status='error'), 400
+    except SyntaxError as err:
+        if connection:
+            connection.rollback()
+        print(f'syntax error: {err}'), 400
+    except Exception as err:
+        if connection:
+            connection.rollback()
+        print(f'error: {err}')
+        return jsonify(status='error'), 400
+    finally:
+        if connection:
+            release_connection(connection)
+
+# GET TOTAL CALORIES AND MACROS ACROSS THE PAST 7 DAYS
+@intakes.route('/view_past_week_nutritional_intakes', methods=['POST'])
+def get_past_week_nutritional_intakes():
+    connection = None
+    try:
+        data = request.get_json()
+        FindIntakesByUserId().load(data)
+
+        connection, cursor = get_cursor()
+        # GET THE BREAKDOWN OF TOTAL CALORIES AND MACROS TAKEN IN THE PAST 7 DAYS
+        cursor.execute('''
+            SELECT 
+                CAST(created_at AS DATE) AS intake_date, 
+                SUM(calories) as total_calories, 
+                SUM(carbohydrates) as total_carbohydrates, 
+                SUM(protein) as total_protein, 
+                SUM(fats) as total_fats
+            FROM intakes
+            WHERE user_id=%s AND created_at >= CURRENT_DATE - INTERVAL '7 days'
+            GROUP BY intake_date
+            ORDER BY intake_date ASC
+        ''', (data['user_id'],))
+
+        results = cursor.fetchall()
+
+        return jsonify(results), 200
+    except ValidationError as err:
+        return jsonify(err.messages)
+    except psycopg2.Error as err:
+        if connection:
+            connection.rollback()
+        print(f'database error: {err}')
+        return jsonify(status='error'), 400
+    except SyntaxError as err:
+        if connection:
+            connection.rollback()
+        print(f'syntax error: {err}'), 400
     except Exception as err:
         if connection:
             connection.rollback()

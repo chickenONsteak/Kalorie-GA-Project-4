@@ -30,15 +30,10 @@ const NavAvatar = () => {
           <DropdownMenuLabel>{`${decoded.first_name} ${decoded.last_name}`}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Edit goals</DropdownMenuItem>
-          <DropdownMenuItem>
-            <NavLink to="register">Register</NavLink>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <NavLink to="sign-in">Sign in</NavLink>
-          </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Log out</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => userContext.setAccessToken(null)}>
+            Log out
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

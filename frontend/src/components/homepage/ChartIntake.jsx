@@ -10,12 +10,13 @@ import {
 
 const ChartIntake = () => {
   const chartData = [
-    { month: "January", desktop: 186, mobile: 80 },
-    { month: "February", desktop: 305, mobile: 200 },
-    { month: "March", desktop: 237, mobile: 120 },
-    { month: "April", desktop: 73, mobile: 190 },
-    { month: "May", desktop: 209, mobile: 130 },
-    { month: "June", desktop: 214, mobile: 140 },
+    { dayOfWeek: "Monday", desktop: 186, mobile: 80 },
+    { dayOfWeek: "Tuesday", desktop: 305, mobile: 200 },
+    { dayOfWeek: "Wednesday", desktop: 237, mobile: 120 },
+    { dayOfWeek: "Thursday", desktop: 73, mobile: 190 },
+    { dayOfWeek: "Friday", desktop: 209, mobile: 130 },
+    { dayOfWeek: "Saturday", desktop: 214, mobile: 140 },
+    { dayOfWeek: "Sundary", desktop: 214, mobile: 140 },
   ];
 
   const chartConfig = {
@@ -41,10 +42,11 @@ const ChartIntake = () => {
       >
         <CartesianGrid vertical={false} />
         <XAxis
-          dataKey="month"
+          dataKey="dayOfWeek"
           tickLine={false}
           tickMargin={8}
           axisLine={true}
+          interval={0} // ENSURE ALL TICKS ARE DISPLAYED
           tickFormatter={(value) => value.slice(0, 3)}
         />
         <ChartTooltip

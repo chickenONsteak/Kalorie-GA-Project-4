@@ -1,7 +1,8 @@
 import React from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useFetch from "../hooks/useFetch";
 
+// THIS IS A CUSTOM HOOK TO DELETE INTAKE WITH TANSTACK FOR REUSABILITY
 const useDeleteIntake = () => {
   const fetchData = useFetch();
   const queryClient = useQueryClient();
@@ -12,15 +13,21 @@ const useDeleteIntake = () => {
         intake_id,
       });
 
-      if (res.ok) {
-        queryClient.invalidateQueries({ queryKey: ["getTodayIntakes"] });
+      if (!res.ok) {
+        throw new Error("failed to delete intake");
       }
+
+      return res;
     } catch (error) {
       console.error(error.message);
     }
   };
 
-  return deleteIntake;
+  return useMutation({
+    mutationFn: deleteIntake,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["getTodayIntakes"] }),
+  });
 };
 
 export default useDeleteIntake;

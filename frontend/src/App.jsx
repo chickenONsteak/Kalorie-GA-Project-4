@@ -6,30 +6,21 @@ import CalendarPage from "./pages/CalendarPage";
 import { ThemeProvider } from "./components/ui/themeProvider";
 import Register from "./pages/RegistrationPage";
 import SignIn from "./pages/SignInPage";
-import UserContext from "./contexts/user";
-import NewIntakeContext from "./contexts/newIntake";
-import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import UserProvider from "./contexts/userProvider";
+import LoadingContext from "./contexts/loading";
+import { useState } from "react";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const [accessToken, setAccessToken] = useState("");
-  const [intake, setIntake] = useState("");
-  const [role, setRole] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div>
       <QueryClientProvider client={queryClient}>
-        <UserContext.Provider
-          value={{
-            accessToken,
-            setAccessToken,
-            role,
-            setRole,
-          }}
-        >
-          <NewIntakeContext.Provider value={{ intake, setIntake }}>
+        <UserProvider>
+          <LoadingContext value={{ isLoading, setIsLoading }}>
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
               <div className="fixed top-0 w-full">
                 <Navbar />
@@ -45,8 +36,8 @@ function App() {
                 <Route path="register" element={<Register />} />
               </Routes>
             </ThemeProvider>
-          </NewIntakeContext.Provider>
-        </UserContext.Provider>
+          </LoadingContext>
+        </UserProvider>
       </QueryClientProvider>
     </div>
   );

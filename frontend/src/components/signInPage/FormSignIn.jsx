@@ -38,8 +38,8 @@ const FormSignIn = () => {
 
       if (res.ok) {
         userContext.setAccessToken(res.data.access);
+        localStorage.setItem("access_token", res.data.access);
         navigate("/main");
-        console.log(res.data.access);
       }
     } catch (error) {
       console.error(error.message);

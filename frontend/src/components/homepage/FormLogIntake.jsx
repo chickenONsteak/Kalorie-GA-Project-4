@@ -19,6 +19,7 @@ import useFetch from "../../hooks/useFetch";
 import UserContext from "../../contexts/user";
 import { jwtDecode } from "jwt-decode";
 import { useQueryClient } from "@tanstack/react-query";
+import LoadingContext from "../../contexts/loading";
 
 const formSchema = z.object({
   foodInput: z
@@ -35,6 +36,7 @@ const FormLogIntake = () => {
   const fetchData = useFetch();
   const userContext = useContext(UserContext);
   const queryClient = useQueryClient();
+  const loadingContext = useContext(LoadingContext);
 
   const addIntake = async (openAiResponse) => {
     try {
@@ -61,12 +63,18 @@ const FormLogIntake = () => {
       if (res.ok) {
         queryClient.invalidateQueries({ queryKey: ["getTodayIntakes"] }); // TO RE-RENDER THE TableIntake COMPONENT
       }
+
+      loadingContext.setIsLoading(false);
+      return res;
     } catch (error) {
-      console.error(error.message);
+      loadingContext.setIsLoading(false);
+      console.error(error.msg);
     }
   };
 
   const getCalorieEstimate = async (data) => {
+    loadingContext.setIsLoading(true);
+
     try {
       const res = await fetchData("/openai/estimate_calories", "PUT", {
         food_description: data.foodInput,
@@ -77,7 +85,8 @@ const FormLogIntake = () => {
         addIntake(res.data.output);
       }
     } catch (error) {
-      console.error(error.message);
+      loadingContext.setIsLoading(false);
+      console.error(error.msg);
     }
   };
 

@@ -8,46 +8,20 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import useFetch from "../../hooks/useFetch";
-import UserContext from "../../contexts/user";
-import { jwtDecode } from "jwt-decode";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 import useDeleteIntake from "../../hooks/useDeleteIntake";
 import UpdateIntakeModal from "../modals/updateIntakeModal";
+import useGetTodayIntake from "../../hooks/useGetTodayIntake";
+import { Skeleton } from "@/components/ui/skeleton";
+import LoadingContext from "../../contexts/loading";
 
 const TableIntake = () => {
-  const fetchData = useFetch();
-  const deleteIntake = useDeleteIntake();
-  const userContext = useContext(UserContext);
   const [selectedIntake, setSelectedIntake] = useState({});
   const [showUpdateIntakeModal, setShowUpdateIntakeModal] = useState(false);
+  const loadingContext = useContext(LoadingContext);
 
-  // GET ALL FOOD INTAKES TODAY
-  const getTodayIntakes = async () => {
-    try {
-      const decoded = jwtDecode(userContext.accessToken);
-
-      const res = await fetchData("/intakes/view_intakes", "POST", {
-        user_id: decoded.user_id,
-      });
-
-      if (res.ok) {
-        console.log(res.data.length);
-        return res;
-      } else {
-        throw new Error("error getting today's intake");
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const query = useQuery({
-    queryKey: ["getTodayIntakes"],
-    queryFn: getTodayIntakes,
-    enabled: !!userContext.accessToken, // SO THAT THE FUNCTION WON'T BE CALLED WHEN USER ISN'T LOGGED IN
-  });
+  const { data, isSuccess, isLoading, isError } = useGetTodayIntake(); // DECONSTRUCT THE useGetTodayIntake CUSTOM HOOK
+  const { mutate } = useDeleteIntake(); // DECONSTRUCT THE useDeleteIntake CUSTOM HOOK
 
   return (
     <>
@@ -60,12 +34,42 @@ const TableIntake = () => {
             <TableHead>Calories</TableHead>
             <TableHead>Carbs</TableHead>
             <TableHead>Protein</TableHead>
-            <TableHead className="text-right">Fats</TableHead>
+            <TableHead>Fats</TableHead>
+            <TableHead></TableHead>
+            <TableHead className="text-right"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {query.isSuccess &&
-            query.data.data.map((intake) => {
+          {loadingContext.isLoading && (
+            <TableRow>
+              <TableCell>
+                <Skeleton className="h-[20px] w-[100px] rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-[20px] w-[100px] rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-[20px] w-[100px] rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-[20px] w-[100px] rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-[20px] w-[100px] rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-[20px] w-[100px] rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-[20px] w-[100px] rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-[20px] w-[100px] rounded-full" />
+              </TableCell>
+            </TableRow>
+          )}
+          {isSuccess &&
+            data.data.map((intake) => {
               return (
                 <TableRow key={intake.id}>
                   <TableCell>{intake.created_at}</TableCell>
@@ -85,7 +89,7 @@ const TableIntake = () => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => deleteIntake(intake.id)}>Del</Button>
+                    <Button onClick={() => mutate(intake.id)}>Del</Button>
                   </TableCell>
                 </TableRow>
               );

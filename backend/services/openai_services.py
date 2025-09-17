@@ -28,6 +28,9 @@ def generate_prompt_for_calorie_estimation(description_of_food):
     - If the description is vague (e.g., "noodles"), suggest likely options to clarify:
       Example: "Do you mean mee pok, ban mian, or instant noodles?"
     - Output in strict JSON only. No extra text.
+    - All string values (food_name, assumptions, required_details, messages) must be in sentence case:
+      - The first word starts with a capital letter.
+      - The rest of the sentence should be lowercase, unless proper nouns (e.g., Milo, Oreo).
     
     Output format (JSON):
     {{
@@ -114,7 +117,7 @@ def estimate_calories():
             input=prompt
         )
         # print(type(response.output_text))
-        # print(response.output_text)
+        print(response.output_text)
 
         # PARSE STR TO JSON FORMAT
         response_json = json.loads(response.output_text)

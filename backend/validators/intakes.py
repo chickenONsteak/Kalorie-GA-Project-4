@@ -17,3 +17,12 @@ class AddNewIntake(Schema):
     carbohydrates = fields.Int(required=True)
     protein = fields.Int(required=True)
     fats = fields.Int(required=True)
+    assumption_1 = fields.Str(required=True)
+    assumption_2 = fields.Str(required=True)
+    assumption_3 = fields.Str(required=True)
+
+class DeleteIntakeById(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+    intake_id = fields.Int(required=True)

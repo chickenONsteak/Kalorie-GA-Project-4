@@ -19,7 +19,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../contexts/user";
 import { useNavigate } from "react-router";
-import { jwtDecode } from "jwt-decode";
 
 const CARBS_CALORIES_PER_GRAM = 4;
 const PROTEIN_CALORIES_PER_GRAM = 4;

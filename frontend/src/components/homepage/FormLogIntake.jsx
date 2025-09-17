@@ -17,8 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import useFetch from "../../hooks/useFetch";
 import NewIntakeContext from "../../contexts/newIntake";
-
-const CONFIDENCE_THRESHOLD = 0.8;
+import UserContext from "../../contexts/user";
+import { jwtDecode } from "jwt-decode";
 
 const formSchema = z.object({
   foodInput: z
@@ -33,11 +33,30 @@ const formSchema = z.object({
 
 const FormLogIntake = () => {
   const fetchData = useFetch();
-  const newIntakeContext = useContext(NewIntakeContext);
+  const userContext = useContext(UserContext);
 
-  // const addIntake = async (data) => {
+  const addIntake = async (openAiResponse) => {
+    try {
+      const decoded = jwtDecode(userContext.accessToken);
 
-  // }
+      await fetchData("/intakes/add_intake", "PUT", {
+        user_id: decoded.user_id,
+        food_name: openAiResponse.food_name,
+        calories: openAiResponse.calories,
+        carbohydrates: openAiResponse.carbohydrates_g,
+        protein: openAiResponse.protein_g,
+        fats: openAiResponse.fats_g,
+        assumption_1: openAiResponse.assumptions[0],
+        assumption_2: openAiResponse.assumptions[1],
+        assumption_3: openAiResponse.assumptions[2],
+        additional_details_required_1: openAiResponse?.required_details[0],
+        additional_details_required_2: openAiResponse?.required_details[1],
+        additional_details_required_3: openAiResponse?.required_details[2],
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   const getCalorieEstimate = async (data) => {
     try {
@@ -46,11 +65,8 @@ const FormLogIntake = () => {
       });
 
       if (res.ok) {
-        newIntakeContext.setIntake(res.data.output);
         // ADD INTO DATABASE
-        console.log(res);
-        console.log(res.data.output);
-        console.log(res.data.output.food_name);
+        addIntake(res.data.output);
       }
     } catch (error) {
       console.error(error.message);
@@ -64,8 +80,6 @@ const FormLogIntake = () => {
       foodInput: "",
     },
   });
-
-  const foodInput = form.watch("foodInput");
 
   function onSubmit(values) {
     // Do something with the form values.
@@ -102,7 +116,6 @@ const FormLogIntake = () => {
           <Button type="submit">Log it!</Button>
         </form>
       </Form>
-      <p>{JSON.stringify(newIntakeContext.intake)}</p>
     </>
   );
 };

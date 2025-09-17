@@ -16,9 +16,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useFetch from "../../hooks/useFetch";
-import NewIntakeContext from "../../contexts/newIntake";
 import UserContext from "../../contexts/user";
 import { jwtDecode } from "jwt-decode";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   foodInput: z
@@ -34,25 +34,33 @@ const formSchema = z.object({
 const FormLogIntake = () => {
   const fetchData = useFetch();
   const userContext = useContext(UserContext);
+  const queryClient = useQueryClient();
 
   const addIntake = async (openAiResponse) => {
     try {
       const decoded = jwtDecode(userContext.accessToken);
 
-      await fetchData("/intakes/add_intake", "PUT", {
+      const res = await fetchData("/intakes/add_intake", "PUT", {
         user_id: decoded.user_id,
         food_name: openAiResponse.food_name,
         calories: openAiResponse.calories,
         carbohydrates: openAiResponse.carbohydrates_g,
         protein: openAiResponse.protein_g,
         fats: openAiResponse.fats_g,
-        assumption_1: openAiResponse.assumptions[0],
-        assumption_2: openAiResponse.assumptions[1],
-        assumption_3: openAiResponse.assumptions[2],
-        additional_details_required_1: openAiResponse?.required_details[0],
-        additional_details_required_2: openAiResponse?.required_details[1],
-        additional_details_required_3: openAiResponse?.required_details[2],
+        assumption_1: openAiResponse?.assumptions[0] ?? "",
+        assumption_2: openAiResponse?.assumptions[1] ?? "",
+        assumption_3: openAiResponse?.assumptions[2] ?? "",
+        additional_details_required_1:
+          openAiResponse?.required_details[0] ?? "",
+        additional_details_required_2:
+          openAiResponse?.required_details[1] ?? "",
+        additional_details_required_3:
+          openAiResponse?.required_details[2] ?? "",
       });
+
+      if (res.ok) {
+        queryClient.invalidateQueries({ queryKey: ["getTodayIntakes"] }); // TO RE-RENDER THE TableIntake COMPONENT
+      }
     } catch (error) {
       console.error(error.message);
     }

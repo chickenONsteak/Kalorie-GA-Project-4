@@ -1,19 +1,32 @@
 import React from "react";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "../ui/button";
 
-const LowConfidenceWarning = (props) => {
+const LowConfidenceWarning = ({ additionalDetails }) => {
+  console.log(additionalDetails);
+
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <Button>⚠️</Button>
-      </HoverCardTrigger>
-      <HoverCardContent>{props.message}</HoverCardContent>
-    </HoverCard>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button>
+          {additionalDetails.additional_details_required_1 != null
+            ? "⚠️"
+            : "🔍"}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <p>{additionalDetails.assumption_1}</p>
+        <p>{additionalDetails.assumption_2}</p>
+        <p>{additionalDetails.assumption_3}</p>
+        <p>{additionalDetails?.additional_details_required_1 ?? ""}</p>
+        <p>{additionalDetails?.additional_details_required_2 ?? ""}</p>
+        <p>{additionalDetails?.additional_details_required_3 ?? ""}</p>
+      </PopoverContent>
+    </Popover>
   );
 };
 

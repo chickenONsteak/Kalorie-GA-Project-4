@@ -14,6 +14,7 @@ import UpdateIntakeModal from "../modals/updateIntakeModal";
 import useGetTodayIntake from "../../hooks/useGetTodayIntake";
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingContext from "../../contexts/loading";
+import LowConfidenceWarning from "./LowConfidenceWarning";
 
 const TableIntake = () => {
   const [selectedIntake, setSelectedIntake] = useState({});
@@ -29,7 +30,8 @@ const TableIntake = () => {
         <TableCaption>A list of your intake for the day</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-left">Time</TableHead>
+            <TableHead className="text-left"></TableHead>
+            <TableHead>Time</TableHead>
             <TableHead>Food</TableHead>
             <TableHead>Calories</TableHead>
             <TableHead>Carbs</TableHead>
@@ -66,12 +68,18 @@ const TableIntake = () => {
               <TableCell>
                 <Skeleton className="h-[20px] w-[100px] rounded-full" />
               </TableCell>
+              <TableCell>
+                <Skeleton className="h-[20px] w-[100px] rounded-full" />
+              </TableCell>
             </TableRow>
           )}
           {isSuccess &&
             data.data.map((intake) => {
               return (
                 <TableRow key={intake.id}>
+                  <TableCell>
+                    <LowConfidenceWarning additionalDetails={intake} />
+                  </TableCell>
                   <TableCell>{intake.created_at}</TableCell>
                   <TableCell>{intake.food_name}</TableCell>
                   <TableCell>{intake.calories}</TableCell>

@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import UserProvider from "./contexts/userProvider";
 import LoadingContext from "./contexts/loading";
 import { useState } from "react";
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,8 @@ function App() {
                 <Route path="sign-in" element={<SignIn />} />
                 <Route path="register" element={<Register />} />
               </Routes>
+
+              <Toaster richColors position="top-center" />
             </ThemeProvider>
           </LoadingContext>
         </UserProvider>

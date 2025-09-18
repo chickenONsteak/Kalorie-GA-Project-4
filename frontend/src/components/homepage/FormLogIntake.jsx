@@ -20,6 +20,7 @@ import UserContext from "../../contexts/user";
 import { jwtDecode } from "jwt-decode";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingContext from "../../contexts/loading";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   foodInput: z
@@ -99,41 +100,39 @@ const FormLogIntake = () => {
   });
 
   function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
     getCalorieEstimate(values);
+    toast("Processing input...", {
+      description: "details will automatically show up on the table below",
+    });
   }
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-y-4">
-          <FormField
-            control={form.control}
-            name="foodInput"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>What did you have?</FormLabel>
-                <FormControl>
-                  <Input
-                    className="w-[400px]"
-                    placeholder="Describe your food — the more details, the better"
-                    {...field}
-                  />
-                </FormControl>
-                {/* <FormDescription>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-y-4">
+        <FormField
+          control={form.control}
+          name="foodInput"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>What did you have?</FormLabel>
+              <FormControl>
+                <Input
+                  className="w-[400px]"
+                  placeholder="Describe your food — the more details, the better"
+                  {...field}
+                />
+              </FormControl>
+              {/* <FormDescription>
                 This is your public display name.
               </FormDescription> */}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <Button type="submit">Log it!</Button>
-        </form>
-      </Form>
-    </>
+        <Button type="submit">Log it!</Button>
+      </form>
+    </Form>
   );
 };
 

@@ -1,5 +1,9 @@
+import base64
+import io
 import os
 import json # FOR PARSING STR (OPENAI'S RESPONSE) TO JSON FORMAT
+from io import BytesIO
+
 from dotenv import load_dotenv
 from openai import OpenAI
 from flask import request, jsonify, Blueprint
@@ -64,14 +68,12 @@ def generate_prompt_for_calorie_estimation(description_of_food):
     return calorie_estimation_prompt
 
 # PROMPT FOR OPENAI TO GUESS THE DISH BASED ON IMAGE INPUT
-def generate_prompt_for_food_recognition(uploaded_image):
+def generate_prompt_for_food_recognition():
     food_recognition_prompt = f"""
     You are a food recognition assistant specialised in Singaporean cuisine. 
     Your task is to identify the dish in the uploaded image with a description suitable for another AI model to estimate calories and macros.
     Take into account local foods, hawker dishes, snacks, bubble tea, kopi/teh drinks, and fusion dishes common in Singapore. 
-    
-    Uploaded image: {uploaded_image}
-    
+        
     Requirements:
     - If the food looks like a common Singaporean dish, use the local name (e.g., "char kway teow", "chicken rice", "mee pok", "milo dinosaur").
     - If the food is international, give a simple description (e.g., "pizza slice")..
@@ -133,3 +135,31 @@ def estimate_calories():
         return jsonify(status='error'), 400
 
 # IDENTIFY FOOD BASED ON UPLOADED IMAGE
+@openai_services.route('/identify_food', methods=['PUT'])
+def identify_food():
+    try:
+        data = request.get_json()
+        base64_image = data["uploaded_image"] # THIS IS YOUR UPLOADED IMAGE IN ASCII FORMAT
+
+        response = client.responses.create(
+            model="gpt-4.1",
+            input=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_text", "text": "what's in this image?"},
+                        {
+                            "type": "input_image",
+                            "image_url": f"data:image/jpeg;base64,{base64_image}",
+                        },
+                    ],
+                }
+            ],
+        )
+
+        print(response.output_text)
+
+        return jsonify(status='ok', msg='successful prompt', output=response.output_text), 200
+    except Exception as err:
+        print(f'error: {err}')
+        return jsonify(status='error'), 400

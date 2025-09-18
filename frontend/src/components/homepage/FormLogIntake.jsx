@@ -50,15 +50,15 @@ const FormLogIntake = () => {
         carbohydrates: openAiResponse.carbohydrates_g,
         protein: openAiResponse.protein_g,
         fats: openAiResponse.fats_g,
-        assumption_1: openAiResponse?.assumptions[0] ?? "",
-        assumption_2: openAiResponse?.assumptions[1] ?? "",
-        assumption_3: openAiResponse?.assumptions[2] ?? "",
+        assumption_1: openAiResponse.assumptions[0],
+        assumption_2: openAiResponse.assumptions[1],
+        assumption_3: openAiResponse.assumptions[2],
         additional_details_required_1:
-          openAiResponse?.required_details[0] ?? "",
+          openAiResponse?.required_details?.[0] ?? "", // OPTIONAL CHAIN THE additional details SINCE IT RETURNS AN EMPTY ARRAY, HENCE IT ACTUALLY EXISTS
         additional_details_required_2:
-          openAiResponse?.required_details[1] ?? "",
+          openAiResponse?.required_details?.[1] ?? "",
         additional_details_required_3:
-          openAiResponse?.required_details[2] ?? "",
+          openAiResponse?.required_details?.[2] ?? "",
       });
 
       if (res.ok) {
@@ -69,7 +69,7 @@ const FormLogIntake = () => {
       return res;
     } catch (error) {
       loadingContext.setIsLoading(false);
-      console.error(error.msg);
+      console.error(error.message);
     }
   };
 
@@ -83,6 +83,7 @@ const FormLogIntake = () => {
 
       if (res.ok) {
         // ADD INTO DATABASE
+        console.log(res.data.output);
         addIntake(res.data.output);
       }
     } catch (error) {
@@ -104,6 +105,7 @@ const FormLogIntake = () => {
     toast("Processing input...", {
       description: "details will automatically show up on the table below",
     });
+    form.reset();
   }
 
   return (

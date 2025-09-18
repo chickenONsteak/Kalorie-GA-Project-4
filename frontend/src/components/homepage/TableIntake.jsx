@@ -78,7 +78,7 @@ const TableIntake = () => {
               return (
                 <TableRow key={intake.id}>
                   <TableCell>
-                    <LowConfidenceWarning additionalDetails={intake} />
+                    <LowConfidenceWarning intake={intake} />
                   </TableCell>
                   <TableCell>{intake.created_at}</TableCell>
                   <TableCell>{intake.food_name}</TableCell>
@@ -86,6 +86,7 @@ const TableIntake = () => {
                   <TableCell>{intake.carbohydrates}</TableCell>
                   <TableCell>{intake.protein}</TableCell>
                   <TableCell>{intake.fats}</TableCell>
+                  <TableCell>{intake.additional_details_required_1}</TableCell>
                   <TableCell>
                     <Button
                       onClick={() => {

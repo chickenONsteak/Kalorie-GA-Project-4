@@ -19,7 +19,6 @@ const UploadIntakePhoto = () => {
   const queryClient = useQueryClient();
   const userContext = useContext(UserContext);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
-  const [isProcessed, setIsProcessed] = useState(false);
 
   const addIntake = async (openAiResponse) => {
     console.log(openAiResponse);
@@ -33,15 +32,15 @@ const UploadIntakePhoto = () => {
         carbohydrates: openAiResponse.carbohydrates_g,
         protein: openAiResponse.protein_g,
         fats: openAiResponse.fats_g,
-        assumption_1: openAiResponse?.assumptions[0] ?? "",
-        assumption_2: openAiResponse?.assumptions[1] ?? "",
-        assumption_3: openAiResponse?.assumptions[2] ?? "",
+        assumption_1: openAiResponse.assumptions[0],
+        assumption_2: openAiResponse.assumptions[1],
+        assumption_3: openAiResponse.assumptions[2],
         additional_details_required_1:
-          openAiResponse?.required_details[0] ?? "",
+          openAiResponse?.required_details?.[0] ?? "", // OPTIONAL CHAIN THE additional details SINCE IT RETURNS AN EMPTY ARRAY, HENCE IT ACTUALLY EXISTS
         additional_details_required_2:
-          openAiResponse?.required_details[1] ?? "",
+          openAiResponse?.required_details?.[1] ?? "",
         additional_details_required_3:
-          openAiResponse?.required_details[2] ?? "",
+          openAiResponse?.required_details?.[2] ?? "",
       });
 
       if (res.ok) {
@@ -79,7 +78,6 @@ const UploadIntakePhoto = () => {
     if (!uploadedImage) return; // IF USER REMOVES IMAGE AND uploadedImage BECOMES UNDEFINED
 
     setIsProcessingImage(true);
-    setIsProcessed(false);
     const reader = new FileReader();
 
     // ASSIGN FUNCTION TO onloadend PROPERTY FIRST BEFORE READING
@@ -93,7 +91,6 @@ const UploadIntakePhoto = () => {
         });
 
         if (res.ok) {
-          setIsProcessed(true);
           // GET CALORIE ESTIMATE AND CAPTURE INSIDE THE TABLE
           getCalorieEstimate(res.data.output);
           event.target.value = "";

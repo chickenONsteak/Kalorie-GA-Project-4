@@ -125,6 +125,9 @@ def update_intake():
         carbohydrates = request.json.get('carbohydrates')
         protein = request.json.get('protein')
         fats = request.json.get('fats')
+        additional_details_required_1 = request.json.get('additional_details_required_1')
+        additional_details_required_2 = request.json.get('additional_details_required_2')
+        additional_details_required_3 = request.json.get('additional_details_required_3')
 
         connection, cursor = get_cursor()
         cursor.execute('SELECT * FROM intakes WHERE id=%s', (intake_id,))
@@ -135,11 +138,16 @@ def update_intake():
                        'calories=COALESCE(%s, %s), '
                        'carbohydrates=COALESCE(%s, %s), '
                        'protein=COALESCE(%s, %s), '
-                       'fats=COALESCE(%s, %s) '
+                       'fats=COALESCE(%s, %s), '
+                       'additional_details_required_1=%s, '
+                       'additional_details_required_2=%s, '
+                       'additional_details_required_3=%s '
                        'WHERE id=%s',
                        (food_name, results['food_name'], calories, results['calories'],
                         carbohydrates, results['carbohydrates'], protein, results['protein'],
-                        fats, results['fats'], intake_id))
+                        fats, results['fats'], additional_details_required_1,
+                        additional_details_required_2, additional_details_required_3,
+                        intake_id))
         connection.commit()
 
         return jsonify(status='ok', msg='intake successfully updated'), 200

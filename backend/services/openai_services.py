@@ -118,12 +118,12 @@ def estimate_calories():
             model="gpt-5-nano",
             input=prompt
         )
-        # print(type(response.output_text))
-        print(response.output_text)
+        # print(response.output_text)
 
         # PARSE STR TO JSON FORMAT
         response_json = json.loads(response.output_text)
 
+        print(response.output_text)
         return jsonify(status='ok', msg='successful prompt', output=response_json), 200
     except ValidationError as err:
         return jsonify(err.messages)
@@ -156,8 +156,6 @@ def identify_food():
                 }
             ],
         )
-
-        print(response.output_text)
 
         return jsonify(status='ok', msg='successful prompt', output=response.output_text), 200
     except Exception as err:

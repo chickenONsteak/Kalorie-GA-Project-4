@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Calendar, CalendarDayButton } from "@/components/ui/calendar";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../contexts/user";

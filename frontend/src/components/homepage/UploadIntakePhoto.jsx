@@ -8,6 +8,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import UserContext from "../../contexts/user";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { toast } from "sonner";
+import GuestModal from "../modals/GuestModal";
+import GuestContext from "../../contexts/guestContext";
 
 const UploadIntakePhoto = () => {
   // WHAT HAPPENS HERE:
@@ -19,6 +21,8 @@ const UploadIntakePhoto = () => {
   const queryClient = useQueryClient();
   const userContext = useContext(UserContext);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
+  const guestContext = useContext(GuestContext);
+  const [openAiResponse, setOpenAiResponse] = useState({});
 
   const addIntake = async (openAiResponse) => {
     console.log(openAiResponse);
@@ -63,9 +67,14 @@ const UploadIntakePhoto = () => {
         food_description: data,
       });
 
-      if (res.ok) {
+      if (res.ok && userContext.accessToken) {
         // ADD INTO DATABASE
         addIntake(res.data.output);
+      } else if (res.ok && !userContext.accessToken) {
+        // GUEST WILL HAVE THEIR RESULT APPEAR IN A MODAL, NOT IN THE LOG TABLE
+        guestContext.setOpenAiResponse(res.data.output);
+        guestContext.setShowGuestModal(true);
+        loadingContext.setIsLoading(false);
       }
     } catch (error) {
       loadingContext.setIsLoading(false);
@@ -77,7 +86,7 @@ const UploadIntakePhoto = () => {
     const uploadedImage = event.target.files[0];
     if (!uploadedImage) return; // IF USER REMOVES IMAGE AND uploadedImage BECOMES UNDEFINED
 
-    setIsProcessingImage(true);
+    setIsProcessingImage(true); // FOR LOADER UI
     const reader = new FileReader();
 
     // ASSIGN FUNCTION TO onloadend PROPERTY FIRST BEFORE READING
@@ -120,14 +129,23 @@ const UploadIntakePhoto = () => {
         type="file"
         accept="image/*"
         onChange={(event) => {
-          toast("Processing image...", {
+          toast.success("Processing image...", {
             description:
               "details will automatically show up on the table below",
+            duration: 5000,
           });
           handleImageUpload(event);
         }}
       />
       {isProcessingImage && <Spinner variant={"ellipsis"} />}
+
+      {/* {guestContext.showGuestModal && (
+        <GuestModal
+          openAiResponse={openAiResponse}
+          open={guestContext.showGuestModal}
+          setOpen={guestContext.setShowGuestModal}
+        />
+      )} */}
     </div>
   );
 };

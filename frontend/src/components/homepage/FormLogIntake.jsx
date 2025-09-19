@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,6 +21,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import LoadingContext from "../../contexts/loading";
 import { toast } from "sonner";
 import GuestModal from "../modals/GuestModal";
+import GuestContext from "../../contexts/guestContext";
 
 const formSchema = z.object({
   foodInput: z
@@ -39,8 +39,9 @@ const FormLogIntake = () => {
   const userContext = useContext(UserContext);
   const queryClient = useQueryClient();
   const loadingContext = useContext(LoadingContext);
-  const [showGuestModal, setShowGuestModal] = useState(false); // TO DISPLAY CALORIE ESTIMATION IN A MODAL FOR GUESTS (NON-LOGGED IN USERS)
+  // const [showGuestModal, setShowGuestModal] = useState(false); // TO DISPLAY CALORIE ESTIMATION IN A MODAL FOR GUESTS (NON-LOGGED IN USERS)
   const [openAiResponse, setOpenAiResponse] = useState({});
+  const guestContext = useContext(GuestContext);
 
   const addIntake = async (openAiResponse) => {
     try {
@@ -83,7 +84,7 @@ const FormLogIntake = () => {
   };
 
   const getCalorieEstimate = async (data) => {
-    setShowGuestModal(false);
+    guestContext.setShowGuestModal(false);
     loadingContext.setIsLoading(true);
 
     try {
@@ -92,14 +93,15 @@ const FormLogIntake = () => {
       });
 
       if (res.ok) {
+        loadingContext.setIsLoading(false);
         // DISPLAY RESULTS TO GUEST
         if (!userContext.accessToken) {
-          setOpenAiResponse(res.data.output);
-          setShowGuestModal(true);
+          guestContext.setOpenAiResponse(res.data.output);
+          guestContext.setShowGuestModal(true);
+        } else {
+          // ADD INTO DATABASE
+          addIntake(res.data.output);
         }
-
-        // ADD INTO DATABASE
-        addIntake(res.data.output);
       }
     } catch (error) {
       loadingContext.setIsLoading(false);
@@ -117,8 +119,9 @@ const FormLogIntake = () => {
 
   function onSubmit(values) {
     getCalorieEstimate(values);
-    toast("Processing input...", {
+    toast.success("Processing input...", {
       description: "details will automatically show up on the table below",
+      duration: 5000,
     });
     form.reset();
   }
@@ -153,13 +156,13 @@ const FormLogIntake = () => {
         </form>
       </Form>
 
-      {showGuestModal && (
+      {/* {guestContext.showGuestModal && (
         <GuestModal
           openAiResponse={openAiResponse}
-          open={showGuestModal}
-          setOpen={setShowGuestModal}
+          open={guestContext.showGuestModal}
+          setOpen={guestContext.setShowGuestModal}
         />
-      )}
+      )} */}
     </div>
   );
 };

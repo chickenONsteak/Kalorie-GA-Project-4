@@ -18,7 +18,6 @@ const LowConfidenceWarning = ({ intake }) => {
   const fetchData = useFetch();
   const loadingContext = useContext(LoadingContext);
   const [open, setOpen] = useState(false);
-  console.log(intake);
 
   const [additionalDetailProvided1, setAdditionalDetailProvided1] =
     useState("");

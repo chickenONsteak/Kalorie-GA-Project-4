@@ -27,6 +27,10 @@ const GuestModal = (props) => {
         </DialogHeader>
         <div className="grid gap-4">
           <div className="grid gap-3">
+            <p className="font-semibold">{"Name of food:"}</p>
+            <p>{props.openAiResponse.food_name}</p>
+          </div>
+          <div className="grid gap-3">
             <p className="font-semibold">{"Calories (kcal):"}</p>
             <p>{props.openAiResponse.calories}</p>
           </div>

@@ -32,7 +32,7 @@ const TableIntake = () => {
           <TableRow className="text-gray-800 dark:text-white font-extrabold text-base">
             <TableHead className="text-left"></TableHead>
             <TableHead>Time</TableHead>
-            <TableHead>Food</TableHead>
+            <TableHead className="w-[100px]">Food</TableHead>
             <TableHead>Calories</TableHead>
             <TableHead>Carbs</TableHead>
             <TableHead>Protein</TableHead>
@@ -90,7 +90,9 @@ const TableIntake = () => {
                       minute: "2-digit",
                     })}
                   </TableCell>
-                  <TableCell>{intake.food_name}</TableCell>
+                  <TableCell className="w-[100px]">
+                    {intake.food_name}
+                  </TableCell>
                   <TableCell>{intake.calories}</TableCell>
                   <TableCell>{intake.carbohydrates}</TableCell>
                   <TableCell>{intake.protein}</TableCell>

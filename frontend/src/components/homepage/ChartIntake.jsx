@@ -97,15 +97,15 @@ const ChartIntake = () => {
     // },
     totalCarbs: {
       label: "Carbs",
-      color: "var(--chart-2)",
+      color: "#16a34a",
     },
     totalProtein: {
       label: "Protein",
-      color: "var(--chart-3)",
+      color: "#15803d",
     },
     totalFats: {
       label: "Fats",
-      color: "var(--chart-4)",
+      color: "#15803d",
     },
   };
 
@@ -127,13 +127,21 @@ const ChartIntake = () => {
             tickMargin={8}
             axisLine={true}
             interval={0} // ENSURE ALL TICKS ARE DISPLAYED
+            tick={{ fontSize: 14, fill: "#111827" }}
             // tickFormatter={(value) => value.slice(0, 3)}
           />
           <ChartTooltip
             cursor={true}
             content={<ChartTooltipContent indicator="line" />}
           />
-          <ChartLegend content={<ChartLegendContent />} />
+          <ChartLegend
+            wrapperStyle={{
+              fontSize: 18,
+              fontWeight: "semibold",
+              color: "#111827",
+            }}
+            content={<ChartLegendContent />}
+          />
           {/* <Area
             dataKey="totalCalories"
             type="natural"
@@ -168,7 +176,6 @@ const ChartIntake = () => {
           />
         </AreaChart>
       </ChartContainer>
-      <p>{JSON.stringify(past7Days)}</p>
     </>
   );
 };

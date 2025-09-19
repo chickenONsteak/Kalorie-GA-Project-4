@@ -23,7 +23,7 @@ function App() {
         <UserProvider>
           <LoadingContext value={{ isLoading, setIsLoading }}>
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-              <div className="fixed top-0 w-full">
+              <div className="fixed top-0 w-full z-50">
                 <Navbar />
               </div>
 

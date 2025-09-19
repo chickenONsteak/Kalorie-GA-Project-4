@@ -49,7 +49,7 @@ const UpdateIntakeModal = (props) => {
   return (
     <Dialog open={props.open} onOpenChange={props.setOpen}>
       {/* <DialogTrigger>Open</DialogTrigger> */}
-      <DialogContent>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
@@ -57,42 +57,47 @@ const UpdateIntakeModal = (props) => {
             account and remove your data from our servers.
           </DialogDescription>
         </DialogHeader>
-        <div>
-          <div>
-            <Label>Name of food</Label>
+        <div className="grid gap-4">
+          <div className="grid gap-3">
+            <Label htmlFor="nameOfFood">Name of food</Label>
             <Input
+              id="nameOfFood"
               type="text"
               value={food_name}
               onChange={(event) => setFoodName(event.target.value)}
             />
           </div>
-          <div>
-            <Label>Calories</Label>
+          <div className="grid gap-3">
+            <Label htmlFor="calories">Calories</Label>
             <Input
+              id="calories"
               type="text"
               value={calories}
               onChange={(event) => setCalories(event.target.value)}
             />
           </div>
-          <div>
-            <Label>Carbs</Label>
+          <div className="grid gap-3">
+            <Label htmlFor="carbohydrates">Carbs</Label>
             <Input
+              id="carbohydrates"
               type="text"
               value={carbohydrates}
               onChange={(event) => setCarbohydrates(event.target.value)}
             />
           </div>
-          <div>
-            <Label>Protein</Label>
+          <div className="grid gap-3">
+            <Label htmlFor="protein">Protein</Label>
             <Input
+              id="protein"
               type="text"
               value={protein}
               onChange={(event) => setProtein(event.target.value)}
             />
           </div>
-          <div>
-            <Label>Fats</Label>
+          <div className="grid gap-3">
+            <Label htmlFor="fats">Fats</Label>
             <Input
+              id="fats"
               type="text"
               value={fats}
               onChange={(event) => setFats(event.target.value)}
@@ -103,7 +108,9 @@ const UpdateIntakeModal = (props) => {
           <DialogClose asChild>
             <Button>Close</Button>
           </DialogClose>
-          <Button onClick={handleUpdateIntake}>Save changes</Button>
+          <Button type="submit" onClick={handleUpdateIntake}>
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

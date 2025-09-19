@@ -108,8 +108,13 @@ const UploadIntakePhoto = () => {
   };
 
   return (
-    <div className="w-full max-w-sm items-center gap-3">
-      <Label htmlFor="picture">Picture</Label>
+    <div>
+      <Label
+        className="mb-1 sm:mt-4 text-lg text-gray-700 dark:text-gray-200"
+        htmlFor="picture"
+      >
+        You can upload an image
+      </Label>
       <Input
         id="picture"
         type="file"

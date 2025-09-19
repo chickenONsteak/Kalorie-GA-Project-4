@@ -53,10 +53,6 @@ const BigCalendar = () => {
           DayButton: ({ children, modifiers, day, ...props }) => {
             let dayIntakes = [];
             if (isSuccess) {
-              // dayIntakes = data.data.filter((intake) => {
-              //   console.log(intake);
-              //   intake.intake_date === day.date.toISOString().split("T")[0];
-              // }); // comparing yyyy-mm-dd
               dayIntakes = data.data.filter((intake) => {
                 const intakeDate = new Date(
                   intake.intake_date
@@ -72,11 +68,26 @@ const BigCalendar = () => {
               <CalendarDayButton day={day} modifiers={modifiers} {...props}>
                 {children}
                 {dayIntakes.map((intake, i) => (
-                  <div key={i} className="flex flex-col text-xs text-blue-500">
-                    <span>{intake.total_calories}</span>
-                    <span> {intake.total_carbohydrates}</span>
-                    <span> {intake.total_protein}</span>
-                    <span> {intake.total_fats}</span>
+                  <div
+                    key={i}
+                    className="flex flex-col text-xs text-[#22c55e] text-lg items-start font-semibold"
+                  >
+                    <p>
+                      <span className="font-extrabold">{"kcals: "}</span>
+                      {intake.total_calories}
+                    </p>
+                    <p>
+                      <span className="font-extrabold">{"carbs: "}</span>
+                      {intake.total_carbohydrates}
+                    </p>
+                    <p>
+                      <span className="font-extrabold">{"protein: "}</span>
+                      {intake.total_protein}
+                    </p>
+                    <p>
+                      <span className="font-extrabold">{"fats: "}</span>
+                      {intake.total_fats}
+                    </p>
                   </div>
                 ))}
               </CalendarDayButton>
@@ -84,7 +95,7 @@ const BigCalendar = () => {
           },
         }}
       />
-      <p>{JSON.stringify(data)}</p>
+      {/* <p>{JSON.stringify(data)}</p> */}
     </>
   );
 };

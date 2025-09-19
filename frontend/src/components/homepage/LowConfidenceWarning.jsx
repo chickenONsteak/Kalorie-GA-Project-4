@@ -100,57 +100,87 @@ const LowConfidenceWarning = ({ intake }) => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button>{intake?.additional_details_required_1 ? "⚠️" : "🔍"}</Button>
+        <Button
+          className={`shadow-md ${
+            intake?.additional_details_required_1
+              ? "bg-[#f97316] hover:bg-[#ea580c]" // CONDITIONAL BACKGROUND COLOURING
+              : "bg-[#22c55e] hover:bg-[#16a34a]"
+          }`}
+        >
+          {intake?.additional_details_required_1 ? "⚠️" : "🔍"}
+        </Button>
       </PopoverTrigger>
-      <PopoverContent>
-        <p>{intake.assumption_1}</p>
-        <p>{intake.assumption_2}</p>
-        <p>{intake.assumption_3}</p>
+      <PopoverContent className="w-auto">
         {intake.additional_details_required_1 ? (
-          <>
-            <div>
-              <Label htmlFor="additionalDetail1">
-                {intake.additional_details_required_1}
-              </Label>
-              <Input
-                id="additionalDetail1"
-                value={additionalDetailProvided1}
-                className="col-span-2 h-8"
-                onChange={(event) =>
-                  setAdditionalDetailProvided1(event.target.value)
-                }
-              />
-            </div>
+          <div>
+            <h2 className="text-lg font-extrabold dark:text-white">
+              This calorie estimate might not be accurate…
+            </h2>
+            <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+              You can add extra details below to help us give a more accurate
+              estimate.
+            </p>
+          </div>
+        ) : (
+          ""
+        )}
+        <h3 className="text-base font-extrabold dark:text-white">
+          Assumptions:
+        </h3>
+        <ol className="list-decimal list-inside space-y-1 text-sm mb-4">
+          <li>{intake.assumption_1}</li>
+          <li>{intake.assumption_2}</li>
+          <li>{intake.assumption_3}</li>
+        </ol>
 
-            <div>
-              <Label htmlFor="additionalDetail2">
-                {intake.additional_details_required_2}
-              </Label>
-              <Input
-                id="additionalDetail2"
-                value={additionalDetailProvided2}
-                className="col-span-2 h-8"
-                onChange={(event) =>
-                  setAdditionalDetailProvided2(event.target.value)
-                }
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="additionalDetail3">
-                {intake.additional_details_required_3}
-              </Label>
-              <Input
-                id="additionalDetail3"
-                value={additionalDetailProvided3}
-                className="col-span-2 h-8"
-                onChange={(event) =>
-                  setAdditionalDetailProvided3(event.target.value)
-                }
-              />
-            </div>
+        {intake.additional_details_required_1 ? (
+          <div>
+            <h3 className="text-base font-extrabold dark:text-white my-2">
+              Additional details required:
+            </h3>
+            <ol className="text-sm mb-4">
+              <li>
+                <Label htmlFor="additionalDetail1">
+                  {intake.additional_details_required_1}
+                </Label>
+                <Input
+                  id="additionalDetail1"
+                  value={additionalDetailProvided1}
+                  className="col-span-2 h-8 my-2"
+                  onChange={(event) =>
+                    setAdditionalDetailProvided1(event.target.value)
+                  }
+                />
+              </li>
+              <li>
+                <Label htmlFor="additionalDetail2">
+                  {intake.additional_details_required_2}
+                </Label>
+                <Input
+                  id="additionalDetail2"
+                  value={additionalDetailProvided2}
+                  className="col-span-2 h-8 my-2"
+                  onChange={(event) =>
+                    setAdditionalDetailProvided2(event.target.value)
+                  }
+                />
+              </li>
+              <li>
+                <Label htmlFor="additionalDetail3">
+                  {intake.additional_details_required_3}
+                </Label>
+                <Input
+                  id="additionalDetail3"
+                  value={additionalDetailProvided3}
+                  className="col-span-2 h-8 my-2"
+                  onChange={(event) =>
+                    setAdditionalDetailProvided3(event.target.value)
+                  }
+                />
+              </li>
+            </ol>
             <Button onClick={handleReview}>Review again</Button>
-          </>
+          </div>
         ) : (
           ""
         )}

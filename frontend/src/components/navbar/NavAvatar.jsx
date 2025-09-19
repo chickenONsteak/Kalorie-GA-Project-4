@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { NavLink } from "react-router";
 import { jwtDecode } from "jwt-decode";
 import UserContext from "../../contexts/user";
 

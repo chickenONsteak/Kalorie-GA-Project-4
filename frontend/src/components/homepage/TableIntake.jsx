@@ -26,10 +26,10 @@ const TableIntake = () => {
 
   return (
     <>
-      <Table>
+      <Table className="w-full">
         <TableCaption>A list of your intake for the day</TableCaption>
         <TableHeader>
-          <TableRow>
+          <TableRow className="text-gray-800 dark:text-white font-extrabold text-base">
             <TableHead className="text-left"></TableHead>
             <TableHead>Time</TableHead>
             <TableHead>Food</TableHead>
@@ -76,17 +76,25 @@ const TableIntake = () => {
           {isSuccess &&
             data.data.map((intake) => {
               return (
-                <TableRow key={intake.id}>
+                <TableRow
+                  className="text-gray-800 dark:text-white font-semibold"
+                  key={intake.id}
+                >
                   <TableCell>
                     <LowConfidenceWarning intake={intake} />
                   </TableCell>
-                  <TableCell>{intake.created_at}</TableCell>
+                  <TableCell>
+                    {new Date(intake.created_at).toLocaleString("en-SG", {
+                      timeZone: "Asia/Singapore",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </TableCell>
                   <TableCell>{intake.food_name}</TableCell>
                   <TableCell>{intake.calories}</TableCell>
                   <TableCell>{intake.carbohydrates}</TableCell>
                   <TableCell>{intake.protein}</TableCell>
                   <TableCell>{intake.fats}</TableCell>
-                  <TableCell>{intake.additional_details_required_1}</TableCell>
                   <TableCell>
                     <Button
                       onClick={() => {
@@ -94,11 +102,16 @@ const TableIntake = () => {
                         setShowUpdateIntakeModal(true);
                       }}
                     >
-                      Update
+                      Edit
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => mutate(intake.id)}>Del</Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => mutate(intake.id)}
+                    >
+                      -
+                    </Button>
                   </TableCell>
                 </TableRow>
               );

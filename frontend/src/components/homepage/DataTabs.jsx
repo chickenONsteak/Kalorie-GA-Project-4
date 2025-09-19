@@ -5,8 +5,8 @@ import ChartIntake from "./ChartIntake";
 
 const DataTabs = () => {
   return (
-    <Tabs defaultValue="log" className="w-full">
-      <TabsList>
+    <Tabs defaultValue="log">
+      <TabsList className="w-1/3">
         <TabsTrigger value="log">Log</TabsTrigger>
         <TabsTrigger value="trends">Trends</TabsTrigger>
       </TabsList>

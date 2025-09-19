@@ -4,9 +4,17 @@ import { NavLink } from "react-router";
 
 const SignInPage = () => {
   return (
-    <div>
-      <h1>Sign in and fuel your steak!</h1>
-      <p>Sign in to Kalorie</p>
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-6 lg:px-8 py-6">
+      <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+        Sign in and{" "}
+        <span className="underline underline-offset-3 decoration-8 decoration-[#22c55e] dark:decoration-[#16a34a]">
+          fuel your streak
+        </span>
+        !
+      </h1>
+      <p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+        Sign in to Kalorie
+      </p>
       <FormSignIn />
 
       <div className="border-b-1 my-8"></div>

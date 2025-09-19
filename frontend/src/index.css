@@ -286,3 +286,25 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+.change {
+  animation: change 4s linear infinite;
+}
+
+@keyframes change {
+  0% {
+    color: #14532d;
+  }
+  25% {
+    color: #16a34a;
+  }
+  50% {
+    color: #22c55e;
+  }
+  75% {
+    color: #4ade80;
+  }
+  100% {
+    color: #14532d;
+  }
+}

@@ -13,16 +13,16 @@ import { NavLink } from "react-router";
 
 const NavMenu = () => {
   return (
-    <NavigationMenu>
+    <NavigationMenu className="flex px-4">
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuLink asChild>
+          <NavigationMenuLink className="font-medium text-base" asChild>
             <NavLink to="main">Home</NavLink>
           </NavigationMenuLink>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuLink asChild>
+          <NavigationMenuLink className="font-medium text-base" asChild>
             <NavLink to="calendar">Calendar</NavLink>
           </NavigationMenuLink>
         </NavigationMenuItem>

@@ -21,6 +21,7 @@ import { jwtDecode } from "jwt-decode";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingContext from "../../contexts/loading";
 import { toast } from "sonner";
+import GuestModal from "../modals/GuestModal";
 
 const formSchema = z.object({
   foodInput: z
@@ -38,10 +39,18 @@ const FormLogIntake = () => {
   const userContext = useContext(UserContext);
   const queryClient = useQueryClient();
   const loadingContext = useContext(LoadingContext);
+  const [showGuestModal, setShowGuestModal] = useState(false); // TO DISPLAY CALORIE ESTIMATION IN A MODAL FOR GUESTS (NON-LOGGED IN USERS)
+  const [openAiResponse, setOpenAiResponse] = useState({});
 
   const addIntake = async (openAiResponse) => {
     try {
-      const decoded = jwtDecode(userContext.accessToken);
+      let decoded = null;
+      if (userContext.accessToken) {
+        decoded = jwtDecode(userContext.accessToken);
+      } else {
+        console.warn("No access token, skipping database logging for guest");
+        return;
+      }
 
       const res = await fetchData("/intakes/add_intake", "PUT", {
         user_id: decoded.user_id,
@@ -74,6 +83,7 @@ const FormLogIntake = () => {
   };
 
   const getCalorieEstimate = async (data) => {
+    setShowGuestModal(false);
     loadingContext.setIsLoading(true);
 
     try {
@@ -82,8 +92,13 @@ const FormLogIntake = () => {
       });
 
       if (res.ok) {
+        // DISPLAY RESULTS TO GUEST
+        if (!userContext.accessToken) {
+          setOpenAiResponse(res.data.output);
+          setShowGuestModal(true);
+        }
+
         // ADD INTO DATABASE
-        console.log(res.data.output);
         addIntake(res.data.output);
       }
     } catch (error) {
@@ -109,32 +124,43 @@ const FormLogIntake = () => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-y-4">
-        <FormField
-          control={form.control}
-          name="foodInput"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>What did you have?</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[400px]"
-                  placeholder="Describe your food — the more details, the better"
-                  {...field}
-                />
-              </FormControl>
-              {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="flex flex-col w-full">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="foodInput"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-800 dark:text-white">
+                  What did you eat?
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full sm:w-[500px] md:w-[700px] lg:w-[900px]"
+                    placeholder="Describe your food — the more details, the better"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Button type="submit">Log it!</Button>
-      </form>
-    </Form>
+          <Button className="my-3" type="submit">
+            Log it!
+          </Button>
+        </form>
+      </Form>
+
+      {showGuestModal && (
+        <GuestModal
+          openAiResponse={openAiResponse}
+          open={showGuestModal}
+          setOpen={setShowGuestModal}
+        />
+      )}
+    </div>
   );
 };
 

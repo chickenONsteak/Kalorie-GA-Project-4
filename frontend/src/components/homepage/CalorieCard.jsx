@@ -58,16 +58,18 @@ const CalorieCard = () => {
   }
 
   return (
-    <Card className="bg-[#22c55e] w-64 h-40 m-5">
-      <CardHeader className="flex justify-start">
-        <CardTitle className="text-white text-lg">⚡️ Calories</CardTitle>
+    <Card className="bg-[#22c55e] w-64 h-40 flex flex-col items-start justify-center mt-5">
+      <CardHeader>
+        <CardTitle className="flex flex-col text-white text-base font-bold text-lg mt-3">
+          ⚡️Calories
+        </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex items-center justify-center w-full">
         <CircularProgressbar
           value={percentage}
           text={`${totalCalorieIntake}/${calorieGoal} kcal`}
           circleRatio={0.35}
-          styles={buildStyles({ rotation: 0.75 })}
+          styles={buildStyles({ rotation: 0.75, textSize: "14px" })}
         />
       </CardContent>
     </Card>

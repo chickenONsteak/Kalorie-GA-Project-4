@@ -11,18 +11,21 @@ const Navbar = () => {
   const userContext = useContext(UserContext);
 
   return (
-    <div className="h-16 w-full border-b-1 shadow-sm flex flex-row items-center bg-background/10 backdrop-blur-md">
-      <img className="h-13 w-auto" src={kalorieLogo} alt="Kalorie logo" />
+    <div className="w-full h-16 flex items-center justify-between px-6 md:px-10 bg-background/10 backdrop-blur-md shadow-sm border-b border-gray-200 ">
+      <img className="h-20 w-auto mb-3" src={kalorieLogo} alt="Kalorie logo" />
 
-      <div className="flex w-full justify-end m-10">
-        <ModeToggle />
+      <div className="flex items-center space-x-4">
+        <ModeToggle className="z-100" />
 
         <NavMenu />
 
         {userContext.accessToken ? (
           <NavAvatar />
         ) : (
-          <Button asChild>
+          <Button
+            className="bg-gradient-to-r from-sky-400 to-emerald-600 hover:from-sky-500 hover:to-emerald-700 shadow-md font-medium text-base"
+            asChild
+          >
             <Link to="/sign-in">Sign in</Link>
           </Button>
         )}

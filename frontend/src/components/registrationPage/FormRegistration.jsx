@@ -138,7 +138,7 @@ const FormRegistration = () => {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex">
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 justify-between">
             <FormField
               control={form.control}
               name="firstName"
@@ -170,7 +170,7 @@ const FormRegistration = () => {
           </div>
 
           {/* divider */}
-          <div className="border-b-1 my-8"></div>
+          <div className="border-b border-gray-300 dark:border-gray-700 my-6"></div>
 
           <FormField
             control={form.control}
@@ -189,52 +189,56 @@ const FormRegistration = () => {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="sr-only">Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Password (min. 12 char long)"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="sr-only">Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Password (min. 12 char long)"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="sr-only">Confirm password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Confirm password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="sr-only">Confirm password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Confirm password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* divider */}
-          <div className="border-b-1 my-8"></div>
+          <div className="border-b border-gray-300 dark:border-gray-700 my-6"></div>
 
-          <div className="flex flex-row items-center">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
             <FormField
               control={form.control}
               name="calorieGoal"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Let's set your caloric goal</FormLabel>
+                  <FormLabel className="text-lg font-normal text-gray-800 dark:text-gray-400">
+                    Let's set your caloric goal
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -248,7 +252,7 @@ const FormRegistration = () => {
                   <FormDescription>
                     Not sure what your goal should be? Check out{" "}
                     <a
-                      className="text-blue-500"
+                      className="text-gray-800 dark:text-gray-400"
                       href="https://www.calculator.net/calorie-calculator.html"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -261,22 +265,24 @@ const FormRegistration = () => {
               )}
             />
 
-            <span>kcal / day</span>
+            <span className="text-gray-800 dark:text-gray-400">kcal / day</span>
           </div>
 
-          <div>
-            <p>
-              <span className="font-bold">Alternatively</span>, you can set by
-              macros:
+          <div className="mt-4">
+            <p className="my-4 text-gray-800 dark:text-gray-400">
+              <span className="font-semibold">Alternatively</span>, you can set
+              by macros:
             </p>
 
-            <div className="flex">
+            <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 mt-2">
               <FormField
                 control={form.control}
                 name="carbsGoal"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Carbs</FormLabel>
+                    <FormLabel className="text-gray-800 dark:text-gray-400">
+                      Carbs
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className="w-[75px]"
@@ -295,7 +301,9 @@ const FormRegistration = () => {
                 name="proteinGoal"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Protein</FormLabel>
+                    <FormLabel className="text-gray-800 dark:text-gray-400">
+                      Protein
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className="w-[75px]"
@@ -314,7 +322,9 @@ const FormRegistration = () => {
                 name="fatsGoal"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fats</FormLabel>
+                    <FormLabel className="text-gray-800 dark:text-gray-400">
+                      Fats
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className="w-[75px]"
@@ -330,7 +340,9 @@ const FormRegistration = () => {
             </div>
           </div>
 
-          <Button type="submit">Register</Button>
+          <Button className="w-full sm:w-auto mt-6" type="submit">
+            Register
+          </Button>
         </form>
       </Form>
     </>

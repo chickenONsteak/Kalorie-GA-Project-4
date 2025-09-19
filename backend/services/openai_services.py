@@ -118,7 +118,7 @@ def estimate_calories():
             model="gpt-5-nano",
             input=prompt
         )
-        # print(response.output_text)
+        print(response.output_text)
 
         # PARSE STR TO JSON FORMAT
         response_json = json.loads(response.output_text)

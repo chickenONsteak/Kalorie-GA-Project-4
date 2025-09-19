@@ -9,6 +9,7 @@ intakes = Blueprint('intakes', __name__)
 
 # GET ALL INTAKES BY USER ID
 @intakes.route('/view_intakes', methods=['POST'])
+# @jwt_required()
 def get_all_intakes_by_user():
     connection = None
     try:
@@ -41,6 +42,7 @@ def get_all_intakes_by_user():
             release_connection(connection)
 
 @intakes.route('/view_today_intakes', methods=['POST'])
+# @jwt_required()
 def get_today_intake_by_user():
     connection = None
     try:

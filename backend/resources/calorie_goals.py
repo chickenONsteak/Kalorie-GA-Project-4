@@ -9,7 +9,7 @@ calorie_goals = Blueprint('calorie_goals', __name__)
 
 # GET CALORIE GOAL BY USER ID
 @calorie_goals.route('/view_goals', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def find_goals_by_user():
     connection = None
     try:

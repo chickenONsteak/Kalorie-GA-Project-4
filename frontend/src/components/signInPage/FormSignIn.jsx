@@ -46,7 +46,7 @@ const FormSignIn = () => {
     }
   };
 
-  // 1. Define your form.
+  // FOR FORM
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,11 +55,7 @@ const FormSignIn = () => {
     },
   });
 
-  // 2. Define a submit handler.
   function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
     signIn(values);
   }
 

@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from resources.calorie_goals import calorie_goals
 from resources.intakes import intakes
@@ -12,6 +12,14 @@ CORS(app)
 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
+
+@jwt.expired_token_loader
+@jwt.invalid_token_loader
+@jwt.unauthorized_loader
+@jwt.needs_fresh_token_loader
+@jwt.revoked_token_loader
+def my_jwt_error_callback(*args):
+    return jsonify(msg='access denied'), 200
 
 app.register_blueprint(users, url_prefix='/api')
 app.register_blueprint(calorie_goals, url_prefix='/goals')

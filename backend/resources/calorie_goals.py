@@ -1,5 +1,6 @@
 import psycopg2
 from flask import request, jsonify, Blueprint
+from flask_jwt_extended import jwt_required
 from db.db_pool import get_cursor, release_connection
 from marshmallow import ValidationError
 from validators.calorie_goals import AddOneGoalInputs, FindGoalsByUserId
@@ -8,6 +9,7 @@ calorie_goals = Blueprint('calorie_goals', __name__)
 
 # GET CALORIE GOAL BY USER ID
 @calorie_goals.route('/view_goals', methods=['POST'])
+@jwt_required()
 def find_goals_by_user():
     connection = None
     try:
@@ -42,6 +44,7 @@ def find_goals_by_user():
 
 # ADD CALORIE GOAL
 @calorie_goals.route('/add_goal', methods=['PUT'])
+@jwt_required()
 def add_new_goal():
     connection = None
     try:

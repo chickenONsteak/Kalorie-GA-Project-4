@@ -26,23 +26,28 @@ const UploadIntakePhoto = () => {
     try {
       const decoded = jwtDecode(userContext.accessToken);
 
-      const res = await fetchData("/intakes/add_intake", "PUT", {
-        user_id: decoded.user_id,
-        food_name: openAiResponse.food_name,
-        calories: openAiResponse.calories,
-        carbohydrates: openAiResponse.carbohydrates_g,
-        protein: openAiResponse.protein_g,
-        fats: openAiResponse.fats_g,
-        assumption_1: openAiResponse.assumptions[0],
-        assumption_2: openAiResponse.assumptions[1],
-        assumption_3: openAiResponse.assumptions[2],
-        additional_details_required_1:
-          openAiResponse?.required_details?.[0] ?? "", // OPTIONAL CHAIN THE additional details SINCE IT RETURNS AN EMPTY ARRAY, HENCE IT ACTUALLY EXISTS
-        additional_details_required_2:
-          openAiResponse?.required_details?.[1] ?? "",
-        additional_details_required_3:
-          openAiResponse?.required_details?.[2] ?? "",
-      });
+      const res = await fetchData(
+        "/intakes/add_intake",
+        "PUT",
+        {
+          user_id: decoded.user_id,
+          food_name: openAiResponse.food_name,
+          calories: openAiResponse.calories,
+          carbohydrates: openAiResponse.carbohydrates_g,
+          protein: openAiResponse.protein_g,
+          fats: openAiResponse.fats_g,
+          assumption_1: openAiResponse.assumptions[0],
+          assumption_2: openAiResponse.assumptions[1],
+          assumption_3: openAiResponse.assumptions[2],
+          additional_details_required_1:
+            openAiResponse?.required_details?.[0] ?? "", // OPTIONAL CHAIN THE additional details SINCE IT RETURNS AN EMPTY ARRAY, HENCE IT ACTUALLY EXISTS
+          additional_details_required_2:
+            openAiResponse?.required_details?.[1] ?? "",
+          additional_details_required_3:
+            openAiResponse?.required_details?.[2] ?? "",
+        },
+        userContext.accessToken
+      );
 
       if (res.ok) {
         queryClient.invalidateQueries({ queryKey: ["getTodayIntakes"] }); // TO RE-RENDER THE TableIntake COMPONENT

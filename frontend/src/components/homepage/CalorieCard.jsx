@@ -1,15 +1,7 @@
 import React from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar"; // importing React component directly from react-circular-progressbar package in node_modules
 import "../../styles/circularProgressbar.css";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import useGetTodayIntake from "../../hooks/useGetTodayIntake";
 import useGetAllIntakes from "../../hooks/useGetAllIntakes";
 
@@ -17,15 +9,9 @@ const CalorieCard = () => {
   const {
     data: dataTodayIntake, // RENAME WHAT TANSTACK QUERY RETURNS
     isSuccess: isSuccessTodayIntake,
-    isLoading: isLoadingTodayIntake,
-    isError: isErrorTodayIntake,
   } = useGetTodayIntake();
-  const {
-    data: dataAllIntakes,
-    isSuccess: isSuccessAllIntakes,
-    isLoading: isLoadingAllIntakes,
-    isError: isErrorAllIntakes,
-  } = useGetAllIntakes();
+  const { data: dataAllIntakes, isSuccess: isSuccessAllIntakes } =
+    useGetAllIntakes();
 
   let totalCalorieIntake = 0;
   let calorieGoal = 0;

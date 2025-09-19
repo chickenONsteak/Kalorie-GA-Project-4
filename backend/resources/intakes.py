@@ -1,5 +1,6 @@
 import psycopg2
 from flask import request, jsonify, Blueprint
+from flask_jwt_extended import jwt_required
 from db.db_pool import get_cursor, release_connection
 from marshmallow import ValidationError
 from validators.intakes import FindIntakesByUserId, AddNewIntake, DeleteIntakeById
@@ -76,6 +77,7 @@ def get_today_intake_by_user():
 
 # ADD NEW INTAKE
 @intakes.route('/add_intake', methods=['PUT'])
+@jwt_required()
 def add_new_intake():
     connection = None
     try:
@@ -116,6 +118,7 @@ def add_new_intake():
 
 # UPDATE INTAKE
 @intakes.route('/update_intake', methods=['PATCH'])
+@jwt_required()
 def update_intake():
     connection = None
     try:
@@ -171,6 +174,7 @@ def update_intake():
 
 # DELETE INTAKE
 @intakes.route('/delete_intake', methods=['DELETE'])
+@jwt_required()
 def delete_intake():
     connection = None
     try:
@@ -205,6 +209,7 @@ def delete_intake():
 
 # GET TOTAL CALORIES AND MACROS ACROSS ALL INTAKES
 @intakes.route('/view_all_nutritional_intakes', methods=['POST'])
+@jwt_required()
 def get_all_nutritional_intakes():
     connection = None
     try:
@@ -251,6 +256,7 @@ def get_all_nutritional_intakes():
 
 # GET TOTAL CALORIES AND MACROS ACROSS THE PAST 7 DAYS
 @intakes.route('/view_past_week_nutritional_intakes', methods=['POST'])
+@jwt_required()
 def get_past_week_nutritional_intakes():
     connection = None
     try:

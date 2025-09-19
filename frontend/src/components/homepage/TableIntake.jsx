@@ -21,11 +21,17 @@ const TableIntake = () => {
   const [showUpdateIntakeModal, setShowUpdateIntakeModal] = useState(false);
   const loadingContext = useContext(LoadingContext);
 
-  const { data, isSuccess, isLoading, isError } = useGetTodayIntake(); // DECONSTRUCT THE useGetTodayIntake CUSTOM HOOK
-  const { mutate } = useDeleteIntake(); // DECONSTRUCT THE useDeleteIntake CUSTOM HOOK
+  const { data, isSuccess, isError, error } = useGetTodayIntake(); // DECONSTRUCT THE useGetTodayIntake CUSTOM HOOK
+  const {
+    mutate,
+    isError: isErrorMutate,
+    error: errorMutate,
+  } = useDeleteIntake(); // DECONSTRUCT THE useDeleteIntake CUSTOM HOOK
 
   return (
     <>
+      {isError && error}
+      {isErrorMutate && errorMutate}
       <Table className="w-full">
         <TableCaption>A list of your intake for the day</TableCaption>
         <TableHeader>

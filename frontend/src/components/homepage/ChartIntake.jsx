@@ -41,7 +41,8 @@ const ChartIntake = () => {
         "POST",
         {
           user_id: decoded.user_id,
-        }
+        },
+        userContext.accessToken
       );
 
       if (res.ok) {

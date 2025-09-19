@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -14,10 +14,12 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import useFetch from "../../hooks/useFetch";
 import { useQueryClient } from "@tanstack/react-query";
+import UserContext from "../../contexts/user";
 
 const UpdateIntakeModal = (props) => {
   const fetchData = useFetch();
   const queryClient = useQueryClient();
+  const userContext = useContext(UserContext);
   const [food_name, setFoodName] = useState(props.intake.food_name || "");
   const [calories, setCalories] = useState(props.intake.calories || 0);
   const [carbohydrates, setCarbohydrates] = useState(
@@ -28,14 +30,19 @@ const UpdateIntakeModal = (props) => {
 
   const handleUpdateIntake = async () => {
     try {
-      const res = await fetchData("/intakes/update_intake", "PATCH", {
-        intake_id: props.intake.id,
-        food_name,
-        calories,
-        carbohydrates,
-        protein,
-        fats,
-      });
+      const res = await fetchData(
+        "/intakes/update_intake",
+        "PATCH",
+        {
+          intake_id: props.intake.id,
+          food_name,
+          calories,
+          carbohydrates,
+          protein,
+          fats,
+        },
+        userContext.accessToken
+      );
 
       if (res.ok) {
         queryClient.invalidateQueries(["getTodayIntakes"]);

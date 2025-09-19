@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Progress } from "../ui/progress";
 import useGetTodayIntake from "../../hooks/useGetTodayIntake";
 import useGetAllIntakes from "../../hooks/useGetAllIntakes";
@@ -16,15 +8,9 @@ const CalorieCard = (props) => {
   const {
     data: dataTodayIntake, // RENAME WHAT TANSTACK QUERY RETURNS
     isSuccess: isSuccessTodayIntake,
-    isLoading: isLoadingTodayIntake,
-    isError: isErrorTodayIntake,
   } = useGetTodayIntake();
-  const {
-    data: dataAllIntakes,
-    isSuccess: isSuccessAllIntakes,
-    isLoading: isLoadingAllIntakes,
-    isError: isErrorAllIntakes,
-  } = useGetAllIntakes();
+  const { data: dataAllIntakes, isSuccess: isSuccessAllIntakes } =
+    useGetAllIntakes();
 
   let totalMacroIntake = 0;
   let macroGoal = 0;

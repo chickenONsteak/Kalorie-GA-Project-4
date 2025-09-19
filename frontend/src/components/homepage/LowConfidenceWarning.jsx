@@ -10,6 +10,7 @@ import { Input } from "../ui/input";
 import { useQueryClient } from "@tanstack/react-query";
 import useFetch from "../../hooks/useFetch";
 import LoadingContext from "../../contexts/loading";
+import UserContext from "../../contexts/user";
 
 const LowConfidenceWarning = ({ intake }) => {
   // WHAT'S HAPPENING HERE: IF LOW CONFIDENCE, USERS ARE ABLE TO PROVIDE ADDITIONAL DETAILS FOR THE AI MODEL TO REVIEW AND ESTIMATE CALORIES AGAIN
@@ -18,6 +19,7 @@ const LowConfidenceWarning = ({ intake }) => {
   const fetchData = useFetch();
   const loadingContext = useContext(LoadingContext);
   const [open, setOpen] = useState(false);
+  const userContext = useContext(UserContext);
 
   const [additionalDetailProvided1, setAdditionalDetailProvided1] =
     useState("");
@@ -45,20 +47,25 @@ const LowConfidenceWarning = ({ intake }) => {
 
   const handleUpdateIntake = async (openAiResponse) => {
     try {
-      const res = await fetchData("/intakes/update_intake", "PATCH", {
-        intake_id: intake.id,
-        food_name: openAiResponse.food_name,
-        calories: openAiResponse.calories,
-        carbohydrates: openAiResponse.carbohydrates_g,
-        protein: openAiResponse.protein_g,
-        fats: openAiResponse.fats_g,
-        additional_details_required_1:
-          openAiResponse?.required_details?.[0] ?? null,
-        additional_details_required_2:
-          openAiResponse?.required_details?.[1] ?? null,
-        additional_details_required_3:
-          openAiResponse?.required_details?.[2] ?? null,
-      });
+      const res = await fetchData(
+        "/intakes/update_intake",
+        "PATCH",
+        {
+          intake_id: intake.id,
+          food_name: openAiResponse.food_name,
+          calories: openAiResponse.calories,
+          carbohydrates: openAiResponse.carbohydrates_g,
+          protein: openAiResponse.protein_g,
+          fats: openAiResponse.fats_g,
+          additional_details_required_1:
+            openAiResponse?.required_details?.[0] ?? null,
+          additional_details_required_2:
+            openAiResponse?.required_details?.[1] ?? null,
+          additional_details_required_3:
+            openAiResponse?.required_details?.[2] ?? null,
+        },
+        userContext.accessToken
+      );
 
       if (res.ok) {
         queryClient.invalidateQueries(["getTodayIntakes"]);

@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,7 +19,6 @@ import { jwtDecode } from "jwt-decode";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingContext from "../../contexts/loading";
 import { toast } from "sonner";
-import GuestModal from "../modals/GuestModal";
 import GuestContext from "../../contexts/guestContext";
 
 const formSchema = z.object({
@@ -39,7 +37,6 @@ const FormLogIntake = () => {
   const userContext = useContext(UserContext);
   const queryClient = useQueryClient();
   const loadingContext = useContext(LoadingContext);
-  // const [showGuestModal, setShowGuestModal] = useState(false); // TO DISPLAY CALORIE ESTIMATION IN A MODAL FOR GUESTS (NON-LOGGED IN USERS)
   const [openAiResponse, setOpenAiResponse] = useState({});
   const guestContext = useContext(GuestContext);
 

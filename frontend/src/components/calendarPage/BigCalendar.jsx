@@ -19,7 +19,8 @@ const BigCalendar = () => {
         "POST",
         {
           user_id: decoded.user_id,
-        }
+        },
+        userContext.accessToken
       );
 
       return res;
@@ -28,7 +29,7 @@ const BigCalendar = () => {
     }
   };
 
-  const { data, isSuccess, isLoading, isError } = useQuery({
+  const { data, isSuccess, isError, error } = useQuery({
     queryKey: ["getAllNutritionalIntakes"],
     queryFn: getAllNutritionalIntakes,
     enabled: !!userContext.accessToken,
@@ -36,6 +37,7 @@ const BigCalendar = () => {
 
   return (
     <>
+      {isError && error}
       <Calendar
         mode="single"
         defaultMonth={today}

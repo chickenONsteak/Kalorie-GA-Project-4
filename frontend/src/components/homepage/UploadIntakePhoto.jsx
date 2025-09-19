@@ -8,7 +8,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import UserContext from "../../contexts/user";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { toast } from "sonner";
-import GuestModal from "../modals/GuestModal";
 import GuestContext from "../../contexts/guestContext";
 
 const UploadIntakePhoto = () => {
@@ -22,10 +21,8 @@ const UploadIntakePhoto = () => {
   const userContext = useContext(UserContext);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const guestContext = useContext(GuestContext);
-  const [openAiResponse, setOpenAiResponse] = useState({});
 
   const addIntake = async (openAiResponse) => {
-    console.log(openAiResponse);
     try {
       const decoded = jwtDecode(userContext.accessToken);
 
@@ -137,15 +134,8 @@ const UploadIntakePhoto = () => {
           handleImageUpload(event);
         }}
       />
-      {isProcessingImage && <Spinner variant={"ellipsis"} />}
 
-      {/* {guestContext.showGuestModal && (
-        <GuestModal
-          openAiResponse={openAiResponse}
-          open={guestContext.showGuestModal}
-          setOpen={guestContext.setShowGuestModal}
-        />
-      )} */}
+      {isProcessingImage && <Spinner variant={"ellipsis"} />}
     </div>
   );
 };

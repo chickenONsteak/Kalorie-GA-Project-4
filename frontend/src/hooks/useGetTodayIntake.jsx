@@ -13,9 +13,14 @@ const useGetTodayIntake = () => {
     try {
       const decoded = jwtDecode(userContext.accessToken);
 
-      const res = await fetchData("/intakes/view_today_intakes", "POST", {
-        user_id: decoded.user_id,
-      });
+      const res = await fetchData(
+        "/intakes/view_today_intakes",
+        "POST",
+        {
+          user_id: decoded.user_id,
+        },
+        userContext.accessToken
+      );
 
       if (!res.ok) {
         throw new Error("error getting today's intake");

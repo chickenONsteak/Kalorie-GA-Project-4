@@ -11,7 +11,7 @@ from marshmallow import ValidationError
 from validators.openai_services import UserIntakeInput
 
 # Threshold for confidence for OpenAI's calorie estimation
-CONFIDENCE_THRESHOLD = 0.8
+CONFIDENCE_THRESHOLD = 0.7
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_SECRET_API_KEY"))

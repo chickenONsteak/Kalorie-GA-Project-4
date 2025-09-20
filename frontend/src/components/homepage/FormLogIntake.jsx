@@ -156,14 +156,6 @@ const FormLogIntake = () => {
           </Button>
         </form>
       </Form>
-
-      {/* {guestContext.showGuestModal && (
-        <GuestModal
-          openAiResponse={openAiResponse}
-          open={guestContext.showGuestModal}
-          setOpen={guestContext.setShowGuestModal}
-        />
-      )} */}
     </div>
   );
 };

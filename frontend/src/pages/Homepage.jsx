@@ -80,7 +80,7 @@ const Homepage = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-6">
       <div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-800 dark:text-white">
-          {`Hey ${username}, ready to check in on`}
+          {`Hey ${username}, ready to check in `}
           <br />
           <span className="change">today</span>
           {`? ${displayedEmoji}`}

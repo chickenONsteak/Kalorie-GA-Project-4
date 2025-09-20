@@ -6,9 +6,9 @@
 
 - [About Kalorie](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#%E2%84%B9%EF%B8%8F-about-kopi--paws)
 - [Features](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-features)
+- [Roles & Permissions]()
 - [Tech Stack](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-tech-stack)
-- [App Hierarchy](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-app-hierarchy--erd)
-- [File Structure](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-file-structure)
+- [App Hierarchy & ERD](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-app-hierarchy--erd)
 - [Setup & Installation](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-setup--installation)
 
 ---
@@ -106,7 +106,7 @@ Additionally, the app provides clear insights into calories, protein, fats, and 
 1. Clone this repo:
 
 ```bash
-git clone https://github.com/your-username/kalorie.git
+git clone https://github.com/chickenONsteak/ga-project-4.git
 cd kalorie
 ```
 

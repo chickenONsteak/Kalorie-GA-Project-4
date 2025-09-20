@@ -4,12 +4,12 @@
 
 ## 📑 Table of Contents
 
-- [About Kalorie](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#%E2%84%B9%EF%B8%8F-about-kopi--paws)
-- [Features](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-features)
-- [Roles & Permissions]()
-- [Tech Stack](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-tech-stack)
-- [App Hierarchy & ERD](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-app-hierarchy--erd)
-- [Setup & Installation](https://github.com/chickenONsteak/ga-project-3?tab=readme-ov-file#-setup--installation)
+- [About Kalorie](https://github.com/chickenONsteak/ga-project-4?tab=readme-ov-file#%E2%84%B9%EF%B8%8F-about-kalorie)
+- [Features](https://github.com/chickenONsteak/ga-project-4?tab=readme-ov-file#-features)
+- [Roles & Permissions](https://github.com/chickenONsteak/ga-project-4?tab=readme-ov-file#-roles--permissions)
+- [Tech Stack](https://github.com/chickenONsteak/ga-project-4?tab=readme-ov-file#-tech-stack)
+- [App Hierarchy & ERD](https://github.com/chickenONsteak/ga-project-4?tab=readme-ov-file#-app-hierarchy--erd)
+- [Setup & Installation](https://github.com/chickenONsteak/ga-project-4?tab=readme-ov-file#-setup--installation)
 
 ---
 
@@ -19,7 +19,7 @@ Calorie tracking is one of the most effective ways to manage weight — somethin
 
 The vision behind **Kalorie** is to make tracking **quick, simple, and effortless** — a process that takes **less than 5 minutes a day**. With this, anyone can stay consistent and in control of their health without the frustration of traditional tracking methods.
 
-Kalorie is a calorie and nutrition tracking web application that helps users log meals, monitor daily intake, and build healthier eating habits. To achieve this speed and simplicity, the app leverages **AI-assisted tracking** instead of manual input:
+**Kalorie** is a calorie and nutrition tracking web application that helps users log meals, monitor daily intake, and build healthier eating habits. To achieve this speed and simplicity, the app leverages **AI-assisted tracking** instead of manual input:
 
 - 🤖 AI food recognition: Input meals with natural language (e.g., “2 slices of pepperoni pizza and a Coke”) instead of manually entering every nutrient.
 - 📸 Image-based logging: Upload a meal photo and let the AI suggest possible foods and calorie counts.

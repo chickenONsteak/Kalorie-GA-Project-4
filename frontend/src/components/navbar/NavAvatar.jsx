@@ -29,8 +29,9 @@ const NavAvatar = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>{`${decoded.first_name} ${decoded.last_name}`}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          {/* NO TIME TO DO CONFIGURE PROFILE PAGE */}
+          {/* <DropdownMenuSeparator />
+          <DropdownMenuItem>Profile</DropdownMenuItem> */}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => userContext.setAccessToken(null)}>
             Log out

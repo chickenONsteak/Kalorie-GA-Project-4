@@ -92,10 +92,6 @@ const ChartIntake = () => {
 
   // MANIPULATE THIS TO CHANGE THE CHART'S LEGEND AND COLOURS
   const chartConfig = {
-    // totalCalories: {
-    //   label: "Calories",
-    //   color: "var(--chart-1)",
-    // },
     totalCarbs: {
       label: "Carbs",
       color: "#16a34a",
@@ -128,8 +124,7 @@ const ChartIntake = () => {
             tickMargin={8}
             axisLine={true}
             interval={0} // ENSURE ALL TICKS ARE DISPLAYED
-            tick={{ fontSize: 14, fill: "#111827" }}
-            // tickFormatter={(value) => value.slice(0, 3)}
+            tick={{ fontSize: 14 }}
           />
           <ChartTooltip
             cursor={true}
@@ -139,18 +134,10 @@ const ChartIntake = () => {
             wrapperStyle={{
               fontSize: 18,
               fontWeight: "semibold",
-              color: "#111827",
+              // color: "#111827",
             }}
             content={<ChartLegendContent />}
           />
-          {/* <Area
-            dataKey="totalCalories"
-            type="natural"
-            fill={chartConfig.totalCalories.color}
-            fillOpacity={0.4}
-            stroke={chartConfig.totalCalories.color}
-            //   stackId="a" // <- THIS IS FOR STACKED CHART, CHANGE IF YOU WANT STACKED
-          /> */}
           <Area
             dataKey="totalCarbs"
             type="natural"

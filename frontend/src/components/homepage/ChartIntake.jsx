@@ -68,8 +68,7 @@ const ChartIntake = () => {
 
       // capture day of the week regardless of whether user logged any intake or not
       return {
-        dayOfWeek: index === past7Days.length - 1 ? "Today" : day,
-        // totalCalories: matchedIntake ? matchedIntake.total_calories : 0,
+        dayOfWeek: index === past7Days.length - 1 ? "Tdy" : day,
         totalCarbs: matchedIntake ? matchedIntake.total_carbohydrates : 0,
         totalProtein: matchedIntake ? matchedIntake.total_protein : 0,
         totalFats: matchedIntake ? matchedIntake.total_fats : 0,

@@ -124,6 +124,7 @@ const ChartIntake = () => {
             tickMargin={8}
             axisLine={true}
             interval={0} // ENSURE ALL TICKS ARE DISPLAYED
+            minTickGap={5} // prevent cutting off "Today"
             tick={{ fontSize: 14 }}
           />
           <ChartTooltip
@@ -134,7 +135,6 @@ const ChartIntake = () => {
             wrapperStyle={{
               fontSize: 18,
               fontWeight: "semibold",
-              // color: "#111827",
             }}
             content={<ChartLegendContent />}
           />

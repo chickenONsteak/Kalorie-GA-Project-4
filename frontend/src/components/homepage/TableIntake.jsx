@@ -10,7 +10,7 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import useDeleteIntake from "../../hooks/useDeleteIntake";
-import UpdateIntakeModal from "../modals/updateIntakeModal";
+import UpdateIntakeModal from "../modals/UpdateIntakeModal";
 import useGetTodayIntake from "../../hooks/useGetTodayIntake";
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingContext from "../../contexts/loading";

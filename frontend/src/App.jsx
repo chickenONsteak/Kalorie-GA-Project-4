@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes } from "react-router";
-import "./App.css";
 import Navbar from "./pages/Navbar";
 import Homepage from "./pages/Homepage";
 import CalendarPage from "./pages/CalendarPage";

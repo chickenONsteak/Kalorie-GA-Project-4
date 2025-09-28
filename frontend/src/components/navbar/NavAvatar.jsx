@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { jwtDecode } from "jwt-decode";
 import UserContext from "../../contexts/user";
+import avatar from "../../assets/hardcoded_avatar.jpg";
 
 const NavAvatar = () => {
   const userContext = useContext(UserContext);
@@ -21,7 +22,8 @@ const NavAvatar = () => {
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
-            <AvatarImage src="https://avatars.githubusercontent.com/u/174097077?v=4" />
+            {/* AVATAR IS HARDCODED, CAN ALLOW USERS TO SET THEIR AVATAR INSTEAD (DIDN'T CREATE THIS FEATURE) */}
+            <AvatarImage src={avatar} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>

@@ -86,7 +86,6 @@ const LowConfidenceWarning = ({ intake }) => {
       if (res.ok) {
         // ADD INTO DATABASE
         loadingContext.setIsLoading(false);
-        console.log(res.data.output);
         handleUpdateIntake(res.data.output);
       }
     } catch (error) {

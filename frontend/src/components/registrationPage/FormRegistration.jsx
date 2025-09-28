@@ -130,7 +130,6 @@ const FormRegistration = () => {
 
   // HANDLE onSubmit
   function onSubmit(values) {
-    console.log(values);
     addNewUser(values);
   }
 

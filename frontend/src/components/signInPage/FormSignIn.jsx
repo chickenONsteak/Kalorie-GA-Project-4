@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -39,9 +39,17 @@ const FormSignIn = () => {
         userContext.setAccessToken(res.data.access);
         localStorage.setItem("access_token", res.data.access);
         navigate("/main");
+      } else {
+        form.setError("password", {
+          type: "manual",
+          message: res.message || "Invalid email or password",
+        });
       }
     } catch (error) {
-      console.error(error.message);
+      form.setError("password", {
+        type: "manual",
+        message: error.message || "Something went wrong",
+      });
     }
   };
 

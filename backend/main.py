@@ -27,4 +27,4 @@ app.register_blueprint(intakes, url_prefix='/intakes')
 app.register_blueprint(openai_services, url_prefix='/openai')
 
 if __name__ == '__main__':
-    app.run(port=5002, debug=os.getenv('DEBUG', False))
+    app.run(port=5000, debug=os.getenv('DEBUG', False))

@@ -6,7 +6,7 @@ import { ThemeProvider } from "./components/ui/themeProvider";
 import Register from "./pages/RegistrationPage";
 import SignIn from "./pages/SignInPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import UserProvider from "./contexts/userProvider";
+import UserProvider from "./contexts/UserProvider";
 import LoadingContext from "./contexts/loading";
 import { useState } from "react";
 import { Toaster } from "sonner";

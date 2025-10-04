@@ -63,18 +63,7 @@ const FormSignIn = () => {
     }
   };
 
-  // // FOR FORM
-  // const form = useForm({
-  //   resolver: zodResolver(formSchema),
-  //   defaultValues: {
-  //     email: "",
-  //     password: "",
-  //   },
-  // });
-
-  function onSubmit(values) {
-    signIn(values);
-  }
+  const onSubmit = (values) => signIn(values);
 
   return (
     <>

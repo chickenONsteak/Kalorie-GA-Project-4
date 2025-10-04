@@ -56,7 +56,7 @@ const CalorieCard = () => {
           textSize: "16px",
           textColor: "black",
           trailColor: "rgba(0, 0, 0, 0.2)",
-          pathColor: "rgba(0, 0, 0, 0.7)",
+          pathColor: "rgba(0, 0, 0, 0.85)",
           strokeLinecap: "round",
         })}
       />

@@ -100,7 +100,7 @@ const Homepage = () => {
       {/* MACRO & CALORIE CARDS */}
       <div className="embla w-full my-12 relative z-0" ref={emblaRef}>
         <div className="embla__container flex justify-between items-center overflow-x-auto scroll-smooth">
-          <div className="embla__slide flex-shrink-0 ">
+          <div className="embla__slide flex-shrink-0 mx-2">
             <CalorieCard />
           </div>
           <div className="embla__slide flex-shrink-0 mx-2">

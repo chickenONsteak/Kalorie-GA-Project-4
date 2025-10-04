@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../contexts/user";
 import { useNavigate } from "react-router";
+import { Spinner } from "../ui/shadcn-io/spinner";
 
 const formSchema = z.object({
   email: z.email(),
@@ -98,7 +99,13 @@ const FormSignIn = () => {
             )}
           />
 
-          <Button type="submit">Sign in</Button>
+          <Button type="submit">
+            {form.formState.isSubmitting ? (
+              <Spinner variant={"default"} />
+            ) : (
+              "Sign in"
+            )}
+          </Button>
         </form>
       </Form>
     </>

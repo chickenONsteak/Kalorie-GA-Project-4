@@ -45,7 +45,7 @@ const CalorieCard = () => {
 
   return (
     <div className="flex flex-col h-40 items-center justify-center bg-[#22c55e] rounded-xl shadow-sm">
-      <p className="text-xl font-bold text-white p-4 mt-2">⚡️Calories</p>
+      <p className="text-xl font-semibold text-white p-4 mt-2">⚡️Calories</p>
       <CircularProgressbar
         className="font-semibold"
         value={percentage}

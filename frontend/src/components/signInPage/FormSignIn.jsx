@@ -100,11 +100,10 @@ const FormSignIn = () => {
           />
 
           <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? (
+            {form.formState.isSubmitting ? "Loading" : "Sign in"}
+            {/* (
               <Spinner variant={"default"} />
-            ) : (
-              "Sign in"
-            )}
+            ) */}
           </Button>
         </form>
       </Form>

@@ -43,7 +43,7 @@ const CalorieCard = (props) => {
   }
 
   return (
-    <Card className="bg-[#22c55e] w-64 h-40 m-5">
+    <Card className="bg-[#22c55e] w-64 h-40">
       <CardHeader className="flex justify-start">
         <CardTitle className="text-white text-lg">{props.children}</CardTitle>
       </CardHeader>

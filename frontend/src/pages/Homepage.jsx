@@ -98,18 +98,18 @@ const Homepage = () => {
       </div>
 
       {/* MACRO & CALORIE CARDS */}
-      <div className="embla w-full my-8 relative z-0" ref={emblaRef}>
-        <div className="embla__container flex justify-between overflow-x-auto scroll-smooth">
-          <div className="embla__slide flex-shrink-0 w-72 sm:w-1/2 lg:w-auto">
+      <div className="embla w-full my-12 relative z-0" ref={emblaRef}>
+        <div className="embla__container flex justify-between items-center overflow-x-auto scroll-smooth">
+          <div className="embla__slide flex-shrink-0 ">
             <CalorieCard />
           </div>
-          <div className="embla__slide flex-shrink-0 w-72 sm:w-1/2 lg:w-auto">
+          <div className="embla__slide flex-shrink-0 mx-2">
             <MacroCard id="carbohydrates">🍞 Carbs</MacroCard>
           </div>
-          <div className="embla__slide flex-shrink-0 w-72 sm:w-1/2 lg:w-auto">
+          <div className="embla__slide flex-shrink-0 mx-2">
             <MacroCard id="protein">🥩 Protein</MacroCard>
           </div>
-          <div className="embla__slide flex-shrink-0 w-72 sm:w-1/2 lg:w-auto">
+          <div className="embla__slide flex-shrink-0 mx-2">
             <MacroCard id="fats">🥓 Fats</MacroCard>
           </div>
         </div>

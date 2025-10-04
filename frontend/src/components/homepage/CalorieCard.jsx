@@ -44,21 +44,23 @@ const CalorieCard = () => {
   }
 
   return (
-    <Card className="bg-[#22c55e] w-64 h-40 flex flex-col items-start justify-center mt-5">
-      <CardHeader>
-        <CardTitle className="flex flex-col text-white text-base font-bold text-lg mt-3">
-          ⚡️Calories
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex items-center justify-center w-full">
-        <CircularProgressbar
-          value={percentage}
-          text={`${totalCalorieIntake}/${calorieGoal} kcal`}
-          circleRatio={0.35}
-          styles={buildStyles({ rotation: 0.75, textSize: "14px" })}
-        />
-      </CardContent>
-    </Card>
+    <div className="flex flex-col h-40 items-center justify-center bg-[#22c55e] rounded-xl shadow-sm">
+      <p className="text-xl font-bold text-white p-4 mt-2">⚡️Calories</p>
+      <CircularProgressbar
+        className="font-semibold"
+        value={percentage}
+        text={`${totalCalorieIntake} kcal`}
+        circleRatio={0.65}
+        styles={buildStyles({
+          rotation: 0.675,
+          textSize: "16px",
+          textColor: "black",
+          trailColor: "rgba(0, 0, 0, 0.2)",
+          pathColor: "rgba(0, 0, 0, 0.7)",
+          strokeLinecap: "round",
+        })}
+      />
+    </div>
   );
 };
 

@@ -29,14 +29,14 @@ const FormSignIn = () => {
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
 
-  // // FOR FORM
-  // const form = useForm({
-  //   resolver: zodResolver(formSchema),
-  //   defaultValues: {
-  //     email: "",
-  //     password: "",
-  //   },
-  // });
+  // FOR FORM
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const signIn = async (data) => {
     try {
@@ -63,14 +63,14 @@ const FormSignIn = () => {
     }
   };
 
-  // FOR FORM
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+  // // FOR FORM
+  // const form = useForm({
+  //   resolver: zodResolver(formSchema),
+  //   defaultValues: {
+  //     email: "",
+  //     password: "",
+  //   },
+  // });
 
   function onSubmit(values) {
     signIn(values);

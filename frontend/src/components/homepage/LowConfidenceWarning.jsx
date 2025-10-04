@@ -9,18 +9,21 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useQueryClient } from "@tanstack/react-query";
 import useFetch from "../../hooks/useFetch";
-import LoadingContext from "../../contexts/loading";
 import UserContext from "../../contexts/user";
+import { Spinner } from "../ui/shadcn-io/spinner";
 
 const LowConfidenceWarning = ({ intake }) => {
   // WHAT'S HAPPENING HERE: IF LOW CONFIDENCE, USERS ARE ABLE TO PROVIDE ADDITIONAL DETAILS FOR THE AI MODEL TO REVIEW AND ESTIMATE CALORIES AGAIN
   // STEP 1. THE ADDITIONAL DETAILS PROVIDED WILL BE WRAPPED IN A PROMPT STRUCTURE (newFoodDescription) AND SENT IN A REQUEST TO ESTIMATE CALORIES
   const queryClient = useQueryClient();
   const fetchData = useFetch();
-  const loadingContext = useContext(LoadingContext);
   const [open, setOpen] = useState(false);
   const userContext = useContext(UserContext);
+  const [isReviewingEstimation, setIsReviewingEstimation] = useState(false);
 
+  // const [assumption1, setAssumption1] = useState(intake.assumption_1); -> to update assumption as well
+  // const [assumption2, setAssumption2] = useState(intake.assumption_2);
+  // const [assumption3, setAssumption3] = useState(intake.assumption_3);
   const [additionalDetailProvided1, setAdditionalDetailProvided1] =
     useState("");
   const [additionalDetailProvided2, setAdditionalDetailProvided2] =
@@ -29,11 +32,15 @@ const LowConfidenceWarning = ({ intake }) => {
     useState("");
   let newFoodDescription = "";
 
+  // BUILD AI PROMPT IF ADDITIONAL DETAILS ARE REQUIRED
   // USING intake?.additional_details_required_1 AS A CHECK WHETHER THE AI MODEL IS CONFIDENT OF THE ESTIMATION
+  // 1. ${assumption1}. -> need to go create new fields in pgadmin (localhost) and supabase (db)
+  // 2. ${assumption2}.
+  // 3. ${assumption3}.
   if (intake?.additional_details_required_1) {
     newFoodDescription = `
       Name of food: ${intake.food_name}. 
-      Original assumptions: 
+      Previous assumptions: 
       1. ${intake.assumption_1}.
       2. ${intake.assumption_2}.
       3. ${intake.assumption_3}.
@@ -76,7 +83,7 @@ const LowConfidenceWarning = ({ intake }) => {
   };
 
   const getCalorieEstimate = async () => {
-    loadingContext.setIsLoading(true);
+    setIsReviewingEstimation(true);
 
     try {
       const res = await fetchData("/openai/estimate_calories", "PUT", {
@@ -85,34 +92,41 @@ const LowConfidenceWarning = ({ intake }) => {
 
       if (res.ok) {
         // ADD INTO DATABASE
-        loadingContext.setIsLoading(false);
         handleUpdateIntake(res.data.output);
+        setIsReviewingEstimation(false);
+        setAdditionalDetailProvided1("");
+        setAdditionalDetailProvided2("");
+        setAdditionalDetailProvided3("");
       }
     } catch (error) {
-      loadingContext.setIsLoading(false);
+      setIsReviewingEstimation(false);
       console.error(error.msg);
     }
   };
 
-  const handleReview = () => {
-    setOpen(false);
-    setAdditionalDetailProvided1("");
-    setAdditionalDetailProvided2("");
-    setAdditionalDetailProvided3("");
+  const handleReview = async () => {
     getCalorieEstimate();
+    setOpen(false);
   };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          disabled={isReviewingEstimation}
           className={`shadow-md ${
             intake?.additional_details_required_1
               ? "bg-[#f97316] hover:bg-[#ea580c]" // CONDITIONAL BACKGROUND COLOURING
               : "bg-[#22c55e] hover:bg-[#16a34a]"
           }`}
         >
-          {intake?.additional_details_required_1 ? "⚠️" : "🔍"}
+          {isReviewingEstimation ? (
+            <Spinner variant={"bars"} />
+          ) : intake?.additional_details_required_1 ? (
+            "⚠️"
+          ) : (
+            "🔍"
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto">

@@ -140,7 +140,7 @@ const UploadIntakePhoto = () => {
         }}
       />
 
-      {isProcessingImage && <Spinner variant={"ellipsis"} />}
+      {isProcessingImage && <Spinner variant={"default"} />}
     </div>
   );
 };
